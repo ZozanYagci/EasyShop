@@ -46,8 +46,9 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="index.html" class="nav-item nav-link active">Anasayfa</a>
-                        <a href="/ProductList/Index" class="nav-item nav-link">Ürünler</a>
+                     
+                        <a href="/Default/Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Default" ? "active" : "")">Anasayfa</a>
+                        <a href="/Product/Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Product" ? "active" : "")">Ürünler</a>
                         <a href="detail.html" class="nav-item nav-link">Ürün Detayları</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Sayfalar <i class="fa fa-angle-down mt-1"></i></a>

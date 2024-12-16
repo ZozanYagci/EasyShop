@@ -30,9 +30,10 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<List<Product>> GetAllAsync(bool noTracking = true)
+        public async Task<List<Product>> GetAllAsync(bool noTracking = true)
         {
-            throw new NotImplementedException();
+
+           return await productDal.GetAll(noTracking);
         }
 
         public Task<Product> GetByIdAsync(int id)

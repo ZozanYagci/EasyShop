@@ -124,7 +124,6 @@ namespace Core.DataAccess.GenericRepository
         public virtual async Task<List<TEntity>> GetAll(bool noTracking = true)
         {
             if (noTracking)
-            
                 return await entity.AsNoTracking().ToListAsync();
             return await entity.ToListAsync();
         }

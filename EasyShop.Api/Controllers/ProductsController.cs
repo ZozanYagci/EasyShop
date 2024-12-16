@@ -15,6 +15,13 @@ namespace EasyShop.Api.Controllers
             this.productService = productService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllProducts()
+        {
+            var products= await productService.GetAllAsync();
+            return Ok(products);
+        }
+
         [HttpGet("GetProductStocks")]
 
         public async Task<IActionResult> GetProductStocks()

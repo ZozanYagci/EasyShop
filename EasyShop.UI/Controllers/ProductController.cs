@@ -2,11 +2,11 @@
 
 namespace EasyShop.UI.Controllers
 {
-    public class DefaultController : Controller
+    public class ProductController : Controller
     {
         public IActionResult Index()
         {
-            ViewData["ActivePage"] = "Default";
+            ViewData["ActivePage"] = "Product";
             return View();
         }
     }
