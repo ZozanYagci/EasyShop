@@ -28,7 +28,11 @@ namespace Business.Mapping
                  .ForMember(p => p.StockQuantity, y => y.MapFrom(z => z.StockQuantity))
                  .ForMember(s => s.SubCategoryId, y => y.MapFrom(z => z.SubCategoryId));
 
-            CreateMap<Product, RecentProductDto>();
+
+            CreateMap<Product, RecentProductDto>()
+                .ForMember(x => x.Price, y => y.MapFrom(z => z.ProductPrices.FirstOrDefault(p => p.IsCurrent).Price))
+                .ForMember(x => x.Name, y => y.MapFrom(z => z.Name))
+                .ForMember(x => x.ImageUrl, y => y.MapFrom(z => z.ImageUrl));
 
         }
     }

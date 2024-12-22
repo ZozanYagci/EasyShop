@@ -21,11 +21,7 @@ namespace DataAccess.Concrete.EntityConfigurations
                    .HasMaxLength(100);  
 
             builder.Property(p => p.Description)
-                   .HasMaxLength(500); 
-
-            builder.Property(p => p.Price)
-                   .IsRequired()
-                   .HasColumnType("decimal(18,2)"); 
+                   .HasMaxLength(500);  
 
             builder.Property(p => p.StockQuantity)
                    .IsRequired(); 

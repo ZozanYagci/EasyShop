@@ -13,7 +13,7 @@ namespace DataAccess.Concrete.EntityFramework
     {
         private readonly Context dbContext;
         private readonly IMapper mapper;
-     
+
 
         public EfProductDal(Context context, IMapper mapper) : base(context)
         {
@@ -51,7 +51,7 @@ namespace DataAccess.Concrete.EntityFramework
                     Id = p.Id,
                     Name = p.Name,
                     ImageUrl = p.ImageUrl,
-                    
+
                     Prices = p.ProductPrices.Select(pp => new ProductPriceDto
                     {
                         Price = pp.Price,
@@ -65,15 +65,10 @@ namespace DataAccess.Concrete.EntityFramework
         public async Task<List<RecentProductDto>> GetRecentProductAsync()
         {
             var recentProducts = await dbContext.Products
+                .Include(p => p.ProductPrices)
                 .OrderByDescending(p => p.CreatedAt)
                 .Take(10)
-                //.Select(p => new RecentProductDto
-                //{
-                //    Name= p.Name,
-                //    Price= p.Price,
-                //    ImageUrl= p.ImageUrl
 
-                //})
                 .ToListAsync();
 
             return mapper.Map<List<RecentProductDto>>(recentProducts);   //AutoMapper
