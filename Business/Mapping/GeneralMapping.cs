@@ -23,12 +23,13 @@ namespace Business.Mapping
 
             CreateMap<Product, ProductListDto>().ReverseMap();
 
-           CreateMap<Product, ProductStockDto>()
-                .ForMember(c=>c.CategoryName, y=>y.MapFrom(z=>z.SubCategory.Category.Name))
-                .ForMember(p=>p.StockQuantity, y=>y.MapFrom(z=>z.StockQuantity))
-                .ForMember(s=>s.SubCategoryId, y=>y.MapFrom(z=>z.SubCategoryId));
+            CreateMap<Product, ProductStockDto>()
+                 .ForMember(c => c.CategoryName, y => y.MapFrom(z => z.SubCategory.Category.Name))
+                 .ForMember(p => p.StockQuantity, y => y.MapFrom(z => z.StockQuantity))
+                 .ForMember(s => s.SubCategoryId, y => y.MapFrom(z => z.SubCategoryId));
 
             CreateMap<Product, RecentProductDto>();
+
         }
     }
 }

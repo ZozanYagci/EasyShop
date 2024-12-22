@@ -18,11 +18,11 @@ namespace EasyShop.UI.ViewComponents.ProductListViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessageProducts = await client.GetAsync("https://localhost:44372/api/Products/");
+            var responseMessageProducts = await client.GetAsync("https://localhost:44372/api/Products/ProductWithPrices");
             if (responseMessageProducts.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessageProducts.Content.ReadAsStringAsync();
-                var products = JsonConvert.DeserializeObject<List<ProductListDto>>(jsonData);
+                var products = JsonConvert.DeserializeObject<List<ProductWithPricesDto>>(jsonData);
                 return View(products);
             }
             return View();

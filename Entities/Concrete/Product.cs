@@ -18,10 +18,9 @@ namespace Entities.Concrete
         public DateTime CreatedAt { get; set; }
 
         public virtual SubCategory SubCategory { get; set; }
-
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
-
         public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<ProductPrice> ProductPrices { get; set; }
     }
 }

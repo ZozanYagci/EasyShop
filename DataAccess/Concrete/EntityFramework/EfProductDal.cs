@@ -5,12 +5,6 @@ using DataAccess.Abstract;
 using DTOs.DTOs.ProductDtos;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -19,6 +13,7 @@ namespace DataAccess.Concrete.EntityFramework
     {
         private readonly Context dbContext;
         private readonly IMapper mapper;
+     
 
         public EfProductDal(Context context, IMapper mapper) : base(context)
         {
@@ -47,6 +42,26 @@ namespace DataAccess.Concrete.EntityFramework
             return productStocks;
         }
 
+        public async Task<List<ProductWithPricesDto>> GetProductWithPricesAsync()
+        {
+
+            var productWithPrices = await dbContext.Products
+                .Select(p => new ProductWithPricesDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    ImageUrl = p.ImageUrl,
+                    
+                    Prices = p.ProductPrices.Select(pp => new ProductPriceDto
+                    {
+                        Price = pp.Price,
+                        IsCurrent = pp.IsCurrent,
+                        EffectiveDate = pp.EffectiveDate,
+                    }).ToList()
+                }).ToListAsync();
+
+            return productWithPrices;
+        }
         public async Task<List<RecentProductDto>> GetRecentProductAsync()
         {
             var recentProducts = await dbContext.Products

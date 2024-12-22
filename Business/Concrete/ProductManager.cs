@@ -46,6 +46,11 @@ namespace Business.Concrete
             return await productDal.GetProductStockAsync();
         }
 
+        public async Task<List<ProductWithPricesDto>> GetProductWithPricesAsync()
+        {
+            return await productDal.GetProductWithPricesAsync();
+        }
+
         public async Task<List<RecentProductDto>> GetRecentProductAsync()
         {
             return await productDal.GetRecentProductAsync();

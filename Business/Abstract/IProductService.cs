@@ -12,5 +12,6 @@ namespace Business.Abstract
     {
         Task<List<ProductStockDto>> GetProductStockAsync();
         Task<List<RecentProductDto>> GetRecentProductAsync();
+        Task<List<ProductWithPricesDto>> GetProductWithPricesAsync();
     }
 }

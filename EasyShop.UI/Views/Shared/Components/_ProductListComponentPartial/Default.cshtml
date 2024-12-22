@@ -1,19 +1,23 @@
-﻿@model List<ProductListDto>
+﻿@model List<ProductWithPricesDto>
 
-    @if (Model is null || !Model.Any())
-    {
+@if (Model is null || !Model.Any())
+{
 
     <div class="col-12 text-center">
         <p>Şu anda görüntülenecek ürün bulunmamaktadır.</p>
     </div>
 
-    }
-    else
+}
+else
+{
+    foreach (var product in Model)
     {
-        foreach (var product in Model)
-        {
 
-         <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+        var currentPrice = product.Prices.FirstOrDefault(p => p.IsCurrent);
+
+        var lastOldPrice = product.Prices.OrderByDescending(p => p.EffectiveDate).FirstOrDefault(p => !p.IsCurrent);
+
+        <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
              <div class="product-item bg-light mb-4">
                <div class="product-img position-relative overflow-hidden">
          
@@ -28,7 +32,14 @@
         <div class="text-center py-4">
             <a class="h6 text-decoration-none text-truncate" href=""> @product.Name </a>
             <div class="d-flex align-items-center justify-content-center mt-2">
-                <h5>@product.Price.ToString("C")</h5><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+
+                <h5>@currentPrice?.Price.ToString("C")</h5>
+                
+                @if(lastOldPrice!=null && lastOldPrice.Price>currentPrice?.Price)
+                {
+                     <h6 class="text-muted ml-2"><del>@lastOldPrice.Price.ToString("C")</del></h6>
+                }
+               
             </div>
             <div class="d-flex align-items-center justify-content-center mb-1">
                 <small class="fa fa-star text-primary mr-1"></small>
