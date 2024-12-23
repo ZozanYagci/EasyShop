@@ -1,26 +1,29 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
 <!DOCTYPE html>
 <html lang="en">
 
-  @await Component.InvokeAsync("_HeaderComponentPartial")
+@await Component.InvokeAsync("_HeaderComponentPartial")
 
 <body>
     @await Component.InvokeAsync("_TopbarComponentPartial")
- 
+
 
     @await Component.InvokeAsync("_NavbarComponentPartial")
-    
+
+    @if (Model?.Paths != null && Model.Paths.Count > 0)
+    {
+        @await Component.InvokeAsync("_NavigationPathComponentPartial", new { paths = Model.Paths })
+    }
 
     @RenderBody()
 
     @await Component.InvokeAsync("_FooterComponentPartial")
 
 
-  @await Component.InvokeAsync("_ScriptComponentPartial")
+    @await Component.InvokeAsync("_ScriptComponentPartial")
 </body>
 
 </html>

@@ -1,0 +1,33 @@
+﻿@model BreadCrumbViewModel
+
+@if (Model?.Paths != null && Model.Paths.Any())
+{
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    @foreach (var path in Model.Paths)
+                    {
+
+                        @if (path == Model.Paths.Last())
+                        {
+
+                            <span class="breadcrumb-item active">@path</span>
+                        }
+                        else if (path == "Ana Sayfa")
+                        {
+                            <a class="breadcrumb-item text-dark" href="/Default/Index">@path</a>
+                        }
+
+                        else
+                        {
+                            <a class="breadcrumb-item text-dark" href="#">@path</a>
+                        }
+                    }
+
+                </nav>
+            </div>
+        </div>
+    </div>
+
+}

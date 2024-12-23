@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EasyShop.UI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EasyShop.UI.Controllers
 {
@@ -7,7 +8,13 @@ namespace EasyShop.UI.Controllers
         public IActionResult Index()
         {
             ViewData["ActivePage"] = "Product";
-            return View();
+
+            var model = new BreadCrumbViewModel
+            {
+                Paths = new List<string> { "Ana Sayfa", "Ürünler", "Ürün Listesi" }
+            };
+
+            return View(model);
         }
     }
 }
