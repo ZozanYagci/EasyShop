@@ -1,4 +1,5 @@
-﻿using DTOs.DTOs.ProductDtos;
+﻿using Core.Utilities.ApiClients;
+using DTOs.DTOs.ProductDtos;
 using EasyShop.DTOs.DTOs.CategoryDtos;
 using EasyShop.UI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,37 +10,24 @@ namespace EasyShop.UI.ViewComponents.DefaultViewComponents
 {
     public class _CategoriesDefaultComponentPartial : ViewComponent
     {
+        private readonly ApiClient apiClient;
 
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public _CategoriesDefaultComponentPartial(IHttpClientFactory httpClientFactory)
+        public _CategoriesDefaultComponentPartial(ApiClient apiClient)
         {
-            _httpClientFactory = httpClientFactory;
+            this.apiClient = apiClient;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var viewModel = new CategoriesViewModel();
 
-            var client = _httpClientFactory.CreateClient();
-            var responseMessageCategories = await client.GetAsync("https://localhost:44372/api/Categories");
-            if (responseMessageCategories.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessageCategories.Content.ReadAsStringAsync();
-                 viewModel.Categories = JsonConvert.DeserializeObject<List<CategoryListDto>>(jsonData);
-                
-            }
+            viewModel.Categories = await apiClient.GetAsync<List<CategoryListDto>>("Categories");
 
-            var responseMessageProductStock = await client.GetAsync("https://localhost:44372/api/Products/GetProductStocks");
-            if (responseMessageProductStock.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessageProductStock.Content.ReadAsStringAsync();
-                viewModel.ProductStocks = JsonConvert.DeserializeObject<List<ProductStockDto>>(jsonData);
+            viewModel.ProductStocks = await apiClient.GetAsync<List<ProductStockDto>>("Products/GetProductStocks");
 
-            }
             return View(viewModel);
-        }
-           
         }
 
     }
+
+}
 

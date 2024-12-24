@@ -1,3 +1,5 @@
+using Core.Utilities.ApiClients;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -8,6 +10,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<ApiClient>();
 
 var app = builder.Build();
 

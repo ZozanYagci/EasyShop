@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Utilities.ApiClients;
 using DTOs.DTOs.ProductDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -8,25 +9,15 @@ namespace EasyShop.UI.ViewComponents.ProductListViewComponents
 {
     public class _ProductListComponentPartial : ViewComponent
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public _ProductListComponentPartial(IHttpClientFactory httpClientFactory)
+        private readonly ApiClient apiClient;
+        public _ProductListComponentPartial(ApiClient apiClient)
         {
-            _httpClientFactory = httpClientFactory;
+            this.apiClient = apiClient;
         }
-
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessageProducts = await client.GetAsync("https://localhost:44372/api/Products/ProductWithPrices");
-            if (responseMessageProducts.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessageProducts.Content.ReadAsStringAsync();
-                var products = JsonConvert.DeserializeObject<List<ProductWithPricesDto>>(jsonData);
-                return View(products);
-            }
-            return View();
-
+            var products = await apiClient.GetAsync<List<ProductWithPricesDto>>("Products/ProductWithPrices");
+            return View(products);
         }
     }
 }
