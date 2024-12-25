@@ -9,28 +9,32 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class Context: DbContext
+    public class Context : DbContext
     {
         public const string DEFAULT_SCHEMA = "dbo";
 
         public Context()
         {
-                
+
         }
 
         public Context(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<Category> Categories {get;set;}
-        public DbSet<Order> Orders {get;set;}
-        public DbSet<OrderDetail> OrderDetails {get;set;}
-        public DbSet<Payment> Payments {get;set;}
-        public DbSet<Product> Products {get;set;}
-        public DbSet<Review> Reviews {get;set;}
-        public DbSet<ShoppingCart> ShoppingCarts {get;set;}
-        public DbSet<User> Users {get;set;}
-        public DbSet<SubCategory> SubCategories { get;set;}
-        public DbSet<ProductPrice> ProductPrices {get;set;}
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<SubCategory> SubCategories { get; set; }
+        public DbSet<ProductPrice> ProductPrices { get; set; }
+        public DbSet<Entities.Concrete.Attribute> Attributes { get; set; }
+        public DbSet<AttributeValue> AttributeValues { get; set; }
+        public DbSet<ProductAttribute> AttributeAttributes { get; set; }
+
 
 
 

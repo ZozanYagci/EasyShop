@@ -21,5 +21,6 @@ namespace Entities.Concrete
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<ProductPrice> ProductPrices { get; set; }
+        public virtual ICollection<ProductAttribute> ProductAttributes { get; set; }    
     }
 }

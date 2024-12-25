@@ -49,7 +49,12 @@ namespace DataAccess.Concrete.EntityConfigurations
             builder.HasMany(p => p.Reviews)
                    .WithOne(r => r.Product)
                    .HasForeignKey(r => r.ProductId)
-                   .OnDelete(DeleteBehavior.Cascade); 
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.ProductAttributes)
+           .WithOne(pa => pa.Product)
+           .HasForeignKey(pa => pa.ProductId)
+           .OnDelete(DeleteBehavior.Cascade);
 
             // Table Mapping
             builder.ToTable("Products");
