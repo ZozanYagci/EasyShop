@@ -34,6 +34,9 @@ builder.Services.AddScoped<ISubCategoryDal, EfSubCategoryDal>();
 builder.Services.AddScoped<IProductService, ProductManager>();
 builder.Services.AddScoped<IProductDal, EfProductDal>();
 
+builder.Services.AddScoped<IFilterService, FilterManager>();
+builder.Services.AddScoped<IFilterDal, EfFilterDal>();
+
 
 var app = builder.Build();
 

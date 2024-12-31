@@ -1,12 +1,35 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Utilities.ApiClients;
+using DTOs.DTOs.FilterAttributes;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EasyShop.UI.ViewComponents.ProductListViewComponents
 {
     public class _ProductListColorFilterComponentPartial:ViewComponent
     {
-        public IViewComponentResult Invoke()
+
+        private readonly ApiClient apiClient;
+
+        public _ProductListColorFilterComponentPartial(ApiClient apiClient)
         {
-            return View();
+            this.apiClient = apiClient;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            try
+            {
+                var colors = await apiClient.GetAsync<List<ColorListDto>>("Filters/colors");
+                if (colors is null || !colors.Any())
+                {
+                    return Content("Renkler yüklenemedi.");
+                }
+                return View(colors);
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error: {ex.Message}");
+               
+            }
         }
     }
 }
