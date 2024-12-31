@@ -19,10 +19,6 @@ namespace EasyShop.UI.ViewComponents.ProductListViewComponents
             try
             {
                 var colors = await apiClient.GetAsync<List<ColorListDto>>("Filters/colors");
-                if (colors is null || !colors.Any())
-                {
-                    return Content("Renkler yüklenemedi.");
-                }
                 return View(colors);
             }
             catch (Exception ex)
