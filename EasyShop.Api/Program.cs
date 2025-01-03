@@ -38,6 +38,16 @@ builder.Services.AddScoped<IFilterService, FilterManager>();
 builder.Services.AddScoped<IFilterDal, EfFilterDal>();
 
 
+//Add Cors
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader();
+
+
+}));
+
 var app = builder.Build();
 
 
@@ -53,6 +63,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors("MyPolicy");
 app.MapControllers();
 
 app.Run();

@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using DTOs.DTOs.FilterDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,6 +45,13 @@ namespace EasyShop.Api.Controllers
         {
             var sizes = await filterService.GetSizeListAsync();
             return Ok(sizes);
+        }
+
+        [HttpPost("filtered-products")]
+        public async Task<IActionResult> GetFilteredProducts([FromBody] FilterRequestDto filterRequest)
+        {
+            var filteredProducts = await filterService.GetFilteredProductsListAsync(filterRequest);
+            return Ok(filteredProducts);
         }
     }
 }

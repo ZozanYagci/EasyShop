@@ -1,4 +1,5 @@
 ﻿using DTOs.DTOs.FilterAttributes;
+using DTOs.DTOs.FilterDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace DataAccess.Abstract
         Task<List<SizeListDto>> GetSizeListAsync();
         Task<List<ComponentListDto>> GetComponentListAsync();
         Task<List<PriceRangeListDto>> GetPriceRangeListAsync();
+        Task<List<ProductsDto>> GetFilteredProductsAsync(FilterRequestDto filterRequest);
     }
 }
