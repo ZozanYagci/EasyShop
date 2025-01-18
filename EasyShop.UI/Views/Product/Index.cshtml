@@ -8,11 +8,7 @@
     <div class="row px-xl-5">
         <div class="col-lg-3 col-md-4" style="max-height: 400px; overflow-y: auto;">
 
-            @await Component.InvokeAsync("_ProductListPriceFilterComponentPartial")
-
-            @await Component.InvokeAsync("_ProductListColorFilterComponentPartial")
-
-            @await Component.InvokeAsync("_ProductListSizeFilterComponentPartial")
+            @await Component.InvokeAsync("_ProductFilterValuesComponentPartial")
 
         </div>
 
@@ -21,8 +17,14 @@
 
                 @await Component.InvokeAsync("_ProductListSortingComponentPartial")
 
-                @await Component.InvokeAsync("_ProductListComponentPartial")
+             @*    @await Component.InvokeAsync("_ProductListComponentPartial") *@
 
+                @{
+                    var filterRequest = (FilterRequestDto)ViewData["FilterRequest"];
+                }
+                   
+                    @await Component.InvokeAsync("_FilteredProductsComponentPartial", new {filterRequest})
+               
                 @await Component.InvokeAsync("_ProductListPaginationComponentPartial")
 
             </div>

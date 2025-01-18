@@ -1,15 +1,15 @@
 ﻿using Core.Utilities.ApiClients;
-using DTOs.DTOs.FilterAttributes;
+using DTOs.DTOs.FilterDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyShop.UI.ViewComponents.ProductListViewComponents
 {
-    public class _ProductListColorFilterComponentPartial:ViewComponent
+    public class _ProductFilterValuesComponentPartial : ViewComponent
     {
 
         private readonly ApiClient apiClient;
 
-        public _ProductListColorFilterComponentPartial(ApiClient apiClient)
+        public _ProductFilterValuesComponentPartial(ApiClient apiClient)
         {
             this.apiClient = apiClient;
         }
@@ -18,8 +18,8 @@ namespace EasyShop.UI.ViewComponents.ProductListViewComponents
         {
             try
             {
-                var colors = await apiClient.GetAsync<List<ColorListDto>>("Filters/colors");
-                return View(colors);
+                var filterValues = await apiClient.GetAsync<List<FilterValueDto>>("Filters/filter-values");
+                return View(filterValues);
             }
             catch (Exception ex)
             {

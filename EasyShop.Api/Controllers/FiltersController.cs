@@ -16,40 +16,18 @@ namespace EasyShop.Api.Controllers
             this.filterService = filterService;
         }
 
-        [HttpGet("colors")]
-        public async Task<IActionResult> GetColors()
+        [HttpGet("filter-values")]
+
+        public async Task<IActionResult> GetFilterValues()
         {
-            var colors= await filterService.GetColorListAsync();
-            return Ok(colors);
-        }
-
-
-        [HttpGet("components")]
-        public async Task<IActionResult> GetComponents()
-        {
-            var components = await filterService.GetComponentListAsync();
-            return Ok(components);
-        }
-
-
-        [HttpGet("price-range")]
-        public async Task<IActionResult> GetPriceRange()
-        {
-            var priceRange = await filterService.GetPriceRangeListAsync();
-            return Ok(priceRange);
-        }
-
-
-        [HttpGet("sizes")]
-        public async Task<IActionResult> GetSizes()
-        {
-            var sizes = await filterService.GetSizeListAsync();
-            return Ok(sizes);
+            var filterValues = await filterService.GetFilterValueAsync();
+            return Ok(filterValues);
         }
 
         [HttpPost("filtered-products")]
         public async Task<IActionResult> GetFilteredProducts([FromBody] FilterRequestDto filterRequest)
         {
+           
             var filteredProducts = await filterService.GetFilteredProductsListAsync(filterRequest);
             return Ok(filteredProducts);
         }

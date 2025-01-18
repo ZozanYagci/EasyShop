@@ -1,4 +1,4 @@
-﻿using DTOs.DTOs.FilterAttributes;
+﻿
 using DTOs.DTOs.FilterDtos;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,7 @@ namespace DataAccess.Abstract
 {
     public interface IFilterDal
     {
-        Task<List<ColorListDto>> GetColorListAsync();
-        Task<List<SizeListDto>> GetSizeListAsync();
-        Task<List<ComponentListDto>> GetComponentListAsync();
-        Task<List<PriceRangeListDto>> GetPriceRangeListAsync();
+        Task<List<FilterValueDto>> GetAllFilterValuesAsync();
         Task<List<ProductsDto>> GetFilteredProductsAsync(FilterRequestDto filterRequest);
     }
 }

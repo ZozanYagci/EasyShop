@@ -1,6 +1,6 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
-using DTOs.DTOs.FilterAttributes;
+
 using DTOs.DTOs.FilterDtos;
 using System;
 using System.Collections.Generic;
@@ -18,29 +18,17 @@ namespace Business.Concrete
         {
             this.filterDal = filterDal;
         }
-        public async Task<List<ColorListDto>> GetColorListAsync()
-        {
-            return await filterDal.GetColorListAsync();
-        }
-
-        public async Task<List<ComponentListDto>> GetComponentListAsync()
-        {
-            return await filterDal.GetComponentListAsync();
-        }
+       
+        
 
         public async Task<List<ProductsDto>> GetFilteredProductsListAsync(FilterRequestDto filterRequest)
         {
             return await filterDal.GetFilteredProductsAsync(filterRequest);
         }
 
-        public async Task<List<PriceRangeListDto>> GetPriceRangeListAsync()
+        public async Task<List<FilterValueDto>> GetFilterValueAsync()
         {
-            return await filterDal.GetPriceRangeListAsync();
-        }
-
-        public async Task<List<SizeListDto>> GetSizeListAsync()
-        {
-           return await filterDal.GetSizeListAsync();
+            return await filterDal.GetAllFilterValuesAsync();
         }
     }
 }

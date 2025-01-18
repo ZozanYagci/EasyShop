@@ -1,4 +1,4 @@
-﻿using DTOs.DTOs.FilterAttributes;
+﻿
 using DTOs.DTOs.FilterDtos;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,7 @@ namespace Business.Abstract
 {
     public interface IFilterService
     {
-        Task<List<ColorListDto>> GetColorListAsync();
-        Task<List<SizeListDto>> GetSizeListAsync();
-        Task<List<ComponentListDto>> GetComponentListAsync();
-        Task<List<PriceRangeListDto>> GetPriceRangeListAsync();
+        Task<List<FilterValueDto>> GetFilterValueAsync();
         Task<List<ProductsDto>> GetFilteredProductsListAsync(FilterRequestDto filterRequest);
     }
 }

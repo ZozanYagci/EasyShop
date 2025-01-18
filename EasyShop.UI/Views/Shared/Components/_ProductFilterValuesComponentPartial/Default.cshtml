@@ -1,0 +1,22 @@
+﻿@model List<FilterValueDto>
+
+@foreach (var filter in Model)
+{
+    <h5 class="section-title position-relative mb-3">
+        <span class="bg-secondary pr-3">@filter.FilterName</span>
+    </h5>
+    <div class="bg-light p-4 mb-30">
+        <form>
+           
+            @foreach (var filterValue in filter.Values)
+            {
+                <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                    <input type="checkbox" class="custom-control-input filter-checkbox" id="@filter.FilterName-@filterValue" data-filter-type="@filter.FilterName" data-value="@filterValue">
+                    <label class="custom-control-label" for="@filter.FilterName-@filterValue">@filterValue</label>
+                </div>
+            }
+        </form>
+    </div>
+}
+
+

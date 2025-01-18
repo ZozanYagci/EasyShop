@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTOs.DTOs.ProductDtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,8 @@ namespace DTOs.DTOs.FilterDtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
+        public string ImageUrl { get; set; }
+        public List<ProductPriceDto> Prices { get; set; }
         public List<ProductAttributeDto> Attributes { get; set; }
     }
 }

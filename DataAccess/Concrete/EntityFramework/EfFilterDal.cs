@@ -1,6 +1,6 @@
 ﻿using DataAccess.Abstract;
-using DTOs.DTOs.FilterAttributes;
 using DTOs.DTOs.FilterDtos;
+using DTOs.DTOs.ProductDtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,76 +20,36 @@ namespace DataAccess.Concrete.EntityFramework
         {
             dbContext = context;
         }
-        public async Task<List<ColorListDto>> GetColorListAsync()
+
+        public async Task<List<FilterValueDto>> GetAllFilterValuesAsync()
         {
-            var colors = await dbContext.Attributes
-                 .Where(a => a.Name == "Renk")
-                 .Include(a => a.AttributeValues)
-                 .Select(a => new ColorListDto
-                 {
-                     ColorValue = a.AttributeValues.Select(av => av.Value).ToList()
+            var filterValues = await dbContext.Attributes
+                .Include(a => a.AttributeValues)
+                .Select(a => new FilterValueDto
+                {
+                    FilterName = a.Name,
+                    Values = a.AttributeValues.Select(av => av.Value).ToList()
+                }).ToListAsync();
 
-                 }).ToListAsync();
-
-            return colors;
+            return filterValues;
         }
-
-        public async Task<List<ComponentListDto>> GetComponentListAsync()
-        {
-            var components = await dbContext.Attributes
-                 .Where(a => a.Name == "Materyal")
-                 .Include(a => a.AttributeValues)
-                 .Select(a => new ComponentListDto
-                 {
-                     ComponentValue = a.AttributeValues.Select(av => av.Value).ToList()
-
-                 }).ToListAsync();
-
-            return components;
-        }
-
-        public async Task<List<PriceRangeListDto>> GetPriceRangeListAsync()
-        {
-            var priceRange = await dbContext.Attributes
-                     .Where(a => a.Name == "Fiyat")
-                     .Include(a => a.AttributeValues)
-                     .Select(a => new PriceRangeListDto
-                     {
-                         PriceRangeValue = a.AttributeValues.Select(av => av.Value).ToList()
-
-                     }).ToListAsync();
-
-            return priceRange;
-        }
-
-        public async Task<List<SizeListDto>> GetSizeListAsync()
-        {
-            var sizes = await dbContext.Attributes
-               .Where(a => a.Name == "Beden")
-               .GroupJoin(dbContext.AttributeValues, a => a.Id, av => av.AttributeId, (a, avs) => new SizeListDto()
-               {
-                   SizeValue = avs.Select(av => av.Value).ToList()
-
-               }).ToListAsync();
-
-            return sizes;
-        }
-
 
         public async Task<List<ProductsDto>> GetFilteredProductsAsync(FilterRequestDto filterRequest)
         {
-            //lazy loading
+
 
             var query = dbContext.Products
+                .AsNoTracking()
+                .Include(p => p.ProductPrices)
                 .Include(p => p.ProductAttributes)
-                .ThenInclude(pa => pa.AttributeValue)
-                .ThenInclude(av => av.Attribute)
+                     .ThenInclude(pa => pa.AttributeValue)
+                     .ThenInclude(av => av.Attribute)
                 .AsQueryable();
 
 
             //Renk filtreleme
 
-            if (filterRequest.Colors != null && filterRequest.Colors.Any())
+            if (filterRequest.Colors?.Any() == true)
             {
                 query = query.Where(p => p.ProductAttributes
                 .Any(pa => pa.AttributeValue.Attribute.Name == "Renk" &&
@@ -98,7 +58,7 @@ namespace DataAccess.Concrete.EntityFramework
 
             //Materyal filtreleme
 
-            if (filterRequest.Components != null && filterRequest.Components.Any())
+            if (filterRequest.Components?.Any() == true)
             {
                 query = query.Where(p => p.ProductAttributes
                 .Any(pa => pa.AttributeValue.Attribute.Name == "Materyal" &&
@@ -107,7 +67,7 @@ namespace DataAccess.Concrete.EntityFramework
 
             //Beden filtreleme
 
-            if (filterRequest.Sizes != null && filterRequest.Sizes.Any())
+            if (filterRequest.Sizes?.Any() == true)
             {
                 query = query.Where(p => p.ProductAttributes
                 .Any(pa => pa.AttributeValue.Attribute.Name == "Beden" &&
@@ -118,21 +78,23 @@ namespace DataAccess.Concrete.EntityFramework
 
             if (filterRequest.MinPrice.HasValue && filterRequest.MaxPrice.HasValue)
             {
-                query = query.Where(p => dbContext.ProductPrices
-                .Where(pp => pp.ProductId == p.Id)
-                .Any(pp => pp.Price >= filterRequest.MinPrice && pp.Price <= filterRequest.MaxPrice));
+                query = query.Where(p => p.ProductPrices
+                //.Where(pp => pp.ProductId == p.Id)
+                .Any(pp => pp.IsCurrent && pp.Price >= filterRequest.MinPrice && pp.Price <= filterRequest.MaxPrice));
             }
-
-
 
             //Filtre uygulanmışsa filtreli ürünleri, uygulanmamışsa tüm ürünleri getirecek.
             var products = await query.Select(p => new ProductsDto
             {
                 Id = p.Id,
                 Name = p.Name,
-                Price = dbContext.ProductPrices
-                .Where(pp => pp.ProductId == p.Id && pp.IsCurrent == true)
-                .Select(pp => pp.Price).FirstOrDefault(),
+
+                Prices = p.ProductPrices.Select(pp => new ProductPriceDto
+                {
+                    Price = pp.Price,
+                    IsCurrent = pp.IsCurrent,
+                    EffectiveDate = pp.EffectiveDate,
+                }).ToList(),
 
                 Attributes = p.ProductAttributes.Select(pa => new ProductAttributeDto
                 {
