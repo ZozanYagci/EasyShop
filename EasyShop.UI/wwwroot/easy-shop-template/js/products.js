@@ -67,7 +67,7 @@
             
             console.log('Product Id:', productId)
             if (productId) {
-                window.open(`/Product/ProductDetail/${productId}`, '_blank');
+                window.open(`/Product/ProductDetail?productId=${productId}`, '_blank');
             }
         });
     });
