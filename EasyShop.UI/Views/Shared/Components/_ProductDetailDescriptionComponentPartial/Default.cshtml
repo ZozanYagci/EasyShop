@@ -1,0 +1,21 @@
+﻿@model List<ProductDetailsDto>
+
+<div class="tab-pane fade show active" id="tab-pane-1">
+    <ul>
+        @foreach (var detail in Model?.Where(d => d.ProductDetailTypeId == 1))
+        {
+            <li>@detail.Content</li>
+        }
+    </ul>
+</div>
+
+<div class="tab-pane fade" id="tab-pane-2">
+    <ul>
+        @foreach (var detail in Model?.Where(d => d.ProductDetailTypeId == 2))
+        {
+            <li>@detail.Content</li>
+        }
+    </ul>
+
+    <script src="/easy-shop-template/js/products.js"></script>
+</div>

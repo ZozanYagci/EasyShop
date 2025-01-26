@@ -34,6 +34,9 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Entities.Concrete.Attribute> Attributes { get; set; }
         public DbSet<AttributeValue> AttributeValues { get; set; }
         public DbSet<ProductAttribute> AttributeAttributes { get; set; }
+        public DbSet<ProductDetail> ProductDetails { get; set; }
+        public DbSet<ProductDetailType> ProductDetailTypes { get; set; }
+        public DbSet<ProductStock> ProductStocks { get; set; }
 
 
 

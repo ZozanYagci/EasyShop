@@ -20,11 +20,6 @@ namespace DataAccess.Concrete.EntityConfigurations
                    .IsRequired()
                    .HasMaxLength(100);  
 
-            builder.Property(p => p.Description)
-                   .HasMaxLength(500);  
-
-            builder.Property(p => p.StockQuantity)
-                   .IsRequired(); 
 
             builder.Property(p => p.CreatedAt)
                    .IsRequired()
@@ -55,6 +50,11 @@ namespace DataAccess.Concrete.EntityConfigurations
            .WithOne(pa => pa.Product)
            .HasForeignKey(pa => pa.ProductId)
            .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p=>p.ProductDetail)
+                .WithOne(pd => pd.Product)
+                .HasForeignKey(pd => pd.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Table Mapping
             builder.ToTable("Products");

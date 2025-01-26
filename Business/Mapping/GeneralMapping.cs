@@ -25,7 +25,7 @@ namespace Business.Mapping
 
             CreateMap<Product, ProductStockDto>()
                  .ForMember(c => c.CategoryName, y => y.MapFrom(z => z.SubCategory.Category.Name))
-                 .ForMember(p => p.StockQuantity, y => y.MapFrom(z => z.StockQuantity))
+                 //.ForMember(p => p.StockQuantity, y => y.MapFrom(z => z.StockQuantity))
                  .ForMember(s => s.SubCategoryId, y => y.MapFrom(z => z.SubCategoryId));
 
 
@@ -34,6 +34,7 @@ namespace Business.Mapping
                 .ForMember(x => x.Name, y => y.MapFrom(z => z.Name))
                 .ForMember(x => x.ImageUrl, y => y.MapFrom(z => z.ImageUrl));
 
+            CreateMap<ProductDetail, ProductDetailsDto>().ReverseMap();
         }
     }
 }

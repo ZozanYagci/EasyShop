@@ -10,8 +10,8 @@ namespace Entities.Concrete
     public class Product : BaseEntity
     {
         public string Name { get; set; }
-        public string Description { get; set; }
-        public int StockQuantity { get; set; }
+        //public string Description { get; set; }
+        //public int StockQuantity { get; set; }
         public string ImageUrl { get; set; }
         public int SubCategoryId { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -21,6 +21,8 @@ namespace Entities.Concrete
         public virtual ICollection<ShoppingCart> ShoppingCarts { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<ProductPrice> ProductPrices { get; set; }
-        public virtual ICollection<ProductAttribute> ProductAttributes { get; set; }    
+        public virtual ICollection<ProductAttribute> ProductAttributes { get; set; } 
+        public virtual ICollection<ProductDetail> ProductDetail { get; set; }
+        public virtual ICollection<ProductStock> ProductStocks { get; set; }
     }
 }

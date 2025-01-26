@@ -41,6 +41,11 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
+        public async Task<List<ProductDetailsDto>> GetProductDetailsAsync(int productId)
+        {
+            return await productDal.GetProductDetailsAsync(productId);
+        }
+
         public async Task<List<ProductStockDto>> GetProductStockAsync()
         {
             return await productDal.GetProductStockAsync();

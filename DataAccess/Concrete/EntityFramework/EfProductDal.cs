@@ -21,6 +21,15 @@ namespace DataAccess.Concrete.EntityFramework
             this.mapper = mapper;
         }
 
+        public async Task<List<ProductDetailsDto>> GetProductDetailsAsync(int productId)
+        {
+           var productDetails = await dbContext.ProductDetails
+                .Where(p => p.ProductId == productId)
+                .ProjectTo<ProductDetailsDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
+            return productDetails ?? new List<ProductDetailsDto>();
+        }
+
         public async Task<List<ProductStockDto>> GetProductStockAsync()
         {
             //var productStocks = await dbContext.Products
@@ -32,11 +41,11 @@ namespace DataAccess.Concrete.EntityFramework
             var productStocks = dbContext.Categories
                 .Select(c => new ProductStockDto
                 {
-                    CategoryName = c.Name,
-                    SubCategoryId = c.Id,
-                    StockQuantity = c.SubCategories
-                    .SelectMany(sc => sc.Products)
-                    .Sum(p => p.StockQuantity)
+                    //CategoryName = c.Name,
+                    //SubCategoryId = c.Id,
+                    //StockQuantity = c.SubCategories
+                    //.SelectMany(sc => sc.Products)
+                    //.Sum(p => p.StockQuantity)
                 }).ToList();
 
             return productStocks;

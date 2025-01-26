@@ -46,5 +46,13 @@ namespace EasyShop.Api.Controllers
             var recentProducts = await productService.GetProductWithPricesAsync();
             return Ok(recentProducts);
         }
+
+        [HttpGet("ProductDetail/{productId}")]
+
+        public async Task<IActionResult> GetProductDetails(int productId)
+        {
+            var productDetails = await productService.GetProductDetailsAsync(productId);
+            return Ok(productDetails);
+        }
     }
 }

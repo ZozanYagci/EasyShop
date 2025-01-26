@@ -4,6 +4,7 @@ using DataAccess.Concrete.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20250122175708_AddedProductDetailsAndProductStocksTables")]
+    partial class AddedProductDetailsAndProductStocksTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,42 +256,24 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Content")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("ProductDetailTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<string>("ProductInfo")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
-                    b.HasIndex("ProductDetailTypeId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductDetails", (string)null);
-                });
-
-            modelBuilder.Entity("Entities.Concrete.ProductDetailType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductDetailTypes", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Concrete.ProductPrice", b =>
@@ -579,12 +564,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Concrete.ProductDetail", b =>
                 {
-                    b.HasOne("Entities.Concrete.ProductDetailType", "ProductDetailType")
-                        .WithMany("ProductDetails")
-                        .HasForeignKey("ProductDetailTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Entities.Concrete.Product", "Product")
                         .WithMany("ProductDetail")
                         .HasForeignKey("ProductId")
@@ -592,8 +571,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-
-                    b.Navigation("ProductDetailType");
                 });
 
             modelBuilder.Entity("Entities.Concrete.ProductPrice", b =>
@@ -704,11 +681,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("ShoppingCarts");
-                });
-
-            modelBuilder.Entity("Entities.Concrete.ProductDetailType", b =>
-                {
-                    b.Navigation("ProductDetails");
                 });
 
             modelBuilder.Entity("Entities.Concrete.SubCategory", b =>

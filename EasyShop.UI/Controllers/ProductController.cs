@@ -1,4 +1,6 @@
-﻿using DTOs.DTOs.FilterDtos;
+﻿using Business.Abstract;
+using DTOs.DTOs.FilterDtos;
+using DTOs.DTOs.ProductDtos;
 using EasyShop.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,6 +8,14 @@ namespace EasyShop.UI.Controllers
 {
     public class ProductController : Controller
     {
+
+        private readonly IProductService productService;
+
+        public ProductController(IProductService productService)
+        {
+            this.productService = productService;
+        }
+
         public IActionResult Index()
         {
             ViewData["ActivePage"] = "Product";
@@ -26,6 +36,21 @@ namespace EasyShop.UI.Controllers
                 Paths = new List<string> { "Ana Sayfa", "Ürünler", "Ürün Listesi" }
             };
 
+            return View(model);
+        }
+  
+        public async Task<IActionResult> ProductDetail(int productId)
+        {
+
+            var productDetail = await productService.GetProductDetailsAsync(productId);
+
+
+            var model = new ProductDetailViewModel
+            {
+                ProductId = productId,
+                ProductDetails = productDetail,
+                Paths = new List<string> { "Ana Sayfa", "Ürünler", "Ürün Detay" }
+            };
             return View(model);
         }
     }

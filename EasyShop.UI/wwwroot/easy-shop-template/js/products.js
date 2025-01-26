@@ -26,7 +26,7 @@
         productCard.innerHTML = `
             <div class="product-item bg-light mb-4">
                 <div class="product-img position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="${product.imageUrl || '/images/placeholder.jpg'}" alt="">
+                    <img class="img-fluid w-100" src="${product.imageUrl || '/images/placeholder.jpg'}" alt="" data-id="${product.id}">
                         <div class="product-action">
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
@@ -35,7 +35,8 @@
                         </div>
                   </div>
                   <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" href="">${product.name}</a>
+
+                  <a class="h6 text-decoration-none text-truncate product-link" href="#" data-id="${product.id}">${product.name}</a>
                     <div class="d-flex align-items-center justify-content-center mt-2">
                         <h5>${currentPrice.price ? currentPrice.price.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' }) : ''}</h5>
                         ${lastOldPrice && lastOldPrice.price > currentPrice.price
@@ -55,6 +56,19 @@
             </div>`;
         fragment.appendChild(productCard);
     });
-   
+
     productContainer.appendChild(fragment);
+
+    // Ürün detayları için tarayıcıda yeni sekme açılsın.
+    document.querySelectorAll('.product-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const productId = e.target.dataset.id;
+            
+            console.log('Product Id:', productId)
+            if (productId) {
+                window.open(`/Product/ProductDetail/${productId}`, '_blank');
+            }
+        });
+    });
 }
