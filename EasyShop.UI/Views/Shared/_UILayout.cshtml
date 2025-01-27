@@ -13,9 +13,9 @@
 
     @await Component.InvokeAsync("_NavbarComponentPartial")
 
-    @if (Model?.Paths != null && Model.Paths.Count > 0)
-    {
-        @await Component.InvokeAsync("_NavigationPathComponentPartial", new { paths = Model.Paths })
+   
+    @if(ViewData["BreadCrumbPaths"] is List<string> paths && paths.Any()){
+        @await Component.InvokeAsync("_NavigationPathComponentPartial", new { paths })
     }
 
     @RenderBody()

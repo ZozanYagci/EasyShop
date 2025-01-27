@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<Context>(options=>
-options.UseSqlServer("Server=.\\MSSQLSERVER1;Initial Catalog=EasyShop;Integrated Security=true;TrustServerCertificate=True"));
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 

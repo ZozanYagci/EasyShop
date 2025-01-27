@@ -7,12 +7,8 @@ namespace EasyShop.UI.ViewComponents.UILayoutViewComponents
     {
         public async Task<IViewComponentResult> InvokeAsync(List<string> paths)
         {
-            
-            var model = new BreadCrumbViewModel
-            {
-                Paths = paths
-            };
-            return View(model);
+        
+            return View(paths);
         }
     }
 }

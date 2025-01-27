@@ -1,15 +1,15 @@
-﻿@model BreadCrumbViewModel
+﻿@model List<string>
 
-@if (Model?.Paths != null && Model.Paths.Any())
+@if (Model != null && Model.Any())
 {
     <div class="container-fluid">
         <div class="row px-xl-5">
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
-                    @foreach (var path in Model.Paths)
+                    @foreach (var path in Model)
                     {
 
-                        @if (path == Model.Paths.Last())
+                        @if (path == Model.Last())
                         {
 
                             <span class="breadcrumb-item active">@path</span>

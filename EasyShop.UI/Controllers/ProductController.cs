@@ -31,12 +31,8 @@ namespace EasyShop.UI.Controllers
 
             ViewData["FilterRequest"] = filterRequest;
 
-            var model = new BreadCrumbViewModel
-            {
-                Paths = new List<string> { "Ana Sayfa", "Ürünler", "Ürün Listesi" }
-            };
-
-            return View(model);
+            ViewData["BreadCrumbPaths"] = new List<string> { "Ana Sayfa", "Ürünler", "Ürün Listesi" };
+            return View();
         }
   
         public async Task<IActionResult> ProductDetail(int productId)
@@ -44,12 +40,12 @@ namespace EasyShop.UI.Controllers
 
             var productDetail = await productService.GetProductDetailsAsync(productId);
 
-
+            ViewData["BreadCrumbPaths"] = new List<string> { "Ana Sayfa", "Ürünler", "Ürün Detay" };
             var model = new ProductDetailViewModel
             {
                 ProductId = productId,
-                ProductDetails = productDetail,
-                Paths = new List<string> { "Ana Sayfa", "Ürünler", "Ürün Detay" }
+                ProductDetails = productDetail
+                
             };
             return View(model);
         }
