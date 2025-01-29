@@ -1,4 +1,4 @@
-﻿using Core.Entities.Concrete.RequestModels;
+﻿using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +9,7 @@ namespace Business.Abstract
 {
     public interface IUserService:IGenericService<User>
     {
+        Task<string> RegisterAsync(User user, string password);
+        Task<string> LoginAsync(string email, string password);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Core.Enums;
+using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -23,9 +24,15 @@ namespace DataAccess.Concrete.EntityConfigurations
                    .IsRequired()
                    .HasMaxLength(100);  
 
-            builder.Property(u => u.Password)
-                   .IsRequired()
-                   .HasMaxLength(255);  
+            builder.HasIndex(u => u.Email)
+                   .IsUnique();
+
+            builder.Property(u => u.PasswordHash)
+                     .IsRequired();
+
+            builder.Property(u => u.PasswordSalt)
+                   .IsRequired();
+
 
             builder.Property(u => u.Phone)
                    .HasMaxLength(20);  
@@ -35,7 +42,13 @@ namespace DataAccess.Concrete.EntityConfigurations
 
             builder.Property(u => u.CreatedAt)
                    .IsRequired()
-                   .HasDefaultValueSql("GETDATE()");  
+                   .HasDefaultValueSql("GETDATE()");
+
+            builder.Property(u => u.Status)
+                .IsRequired()
+                .HasDefaultValue(UserStatus.Active)
+                .HasConversion<int>();
+
 
             // Relationships
             builder.HasMany(u => u.Orders)

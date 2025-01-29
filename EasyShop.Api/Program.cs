@@ -1,9 +1,13 @@
 using Business.Abstract;
 using Business.Concrete;
 using Business.Mapping;
+using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +41,8 @@ builder.Services.AddScoped<IProductDal, EfProductDal>();
 builder.Services.AddScoped<IFilterService, FilterManager>();
 builder.Services.AddScoped<IFilterDal, EfFilterDal>();
 
+builder.Services.AddScoped<JwtHelper>();
+
 
 //Add Cors
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
@@ -47,6 +53,23 @@ builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 
 
 }));
+
+// add jwt authentication
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["TokenOptions:Issuer"],  // appsettings.json
+            ValidAudience = builder.Configuration["TokenOptions:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenOptions:SecretKey"]))
+        };
+    });
 
 var app = builder.Build();
 
