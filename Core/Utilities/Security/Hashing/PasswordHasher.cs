@@ -10,17 +10,16 @@ namespace Core.Utilities.Security.Hashing
 {
     public class PasswordHasher
     {
-        public static string HashPassword(string password)
+        public static byte[] HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(hashedBytes);
+            return sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
 
-        public static bool VerifyPassword(string hashedPassword, string inputPassword)
+        public static bool VerifyPassword(byte[] hashedPassword, string inputPassword)
         {
             var hashedInput = HashPassword(inputPassword);
-            return hashedPassword == hashedInput;
+            return hashedPassword.SequenceEqual(hashedInput);
         }
     }
 }

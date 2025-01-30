@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess.EntityFramework;
+using Core.Entities.Concrete;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstract
 {
-    public interface IUserDal:IGenericRepository<User>
+    public interface IUserDal:IGenericRepository<AuthUser>
     {
-        Task<User> GetByEmailAsync(string email);
+        Task<AuthUser> GetByEmailAsync(string email);
     }
 }

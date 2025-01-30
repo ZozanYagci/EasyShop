@@ -24,7 +24,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<Context>(options=>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+builder.Services.AddSingleton<TokenOptions>(sp=>builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>());
 
 builder.Services.AddScoped<ICategoryService, CategoryManager>();
 builder.Services.AddScoped<ICategoryDal, EfCategoryDal>();
@@ -41,7 +41,10 @@ builder.Services.AddScoped<IProductDal, EfProductDal>();
 builder.Services.AddScoped<IFilterService, FilterManager>();
 builder.Services.AddScoped<IFilterDal, EfFilterDal>();
 
-builder.Services.AddScoped<JwtHelper>();
+builder.Services.AddScoped<IUserService, UserManager>();
+builder.Services.AddScoped<IUserDal, EfUserDal>();
+
+builder.Services.AddScoped<ITokenHelper ,JwtHelper>();
 
 
 //Add Cors
