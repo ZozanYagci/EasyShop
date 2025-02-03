@@ -23,7 +23,8 @@ namespace Core.DataAccess.GenericRepository
         }
         public int Add(TEntity entity)
         {
-            throw new NotImplementedException();
+            this.entity.Add(entity);
+            return dbContext.SaveChanges();
         }
 
         public int Add(IEnumerable<TEntity> entities)
@@ -31,9 +32,11 @@ namespace Core.DataAccess.GenericRepository
             throw new NotImplementedException();
         }
 
-        public Task<int> AddAsync(TEntity entity)
+        public async Task<int> AddAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            await this.entity.AddAsync(entity);
+            return await dbContext.SaveChangesAsync();
+            
         }
 
         public Task<int> AddAsync(IEnumerable<TEntity> entities)
@@ -118,7 +121,17 @@ namespace Core.DataAccess.GenericRepository
 
         public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
-            throw new NotImplementedException();
+            var query = dbContext.Set<TEntity>().Where(predicate);
+
+            foreach(var include in includes)
+            {
+                query = query.Include(include);
+            }
+            if (noTracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return query;
         }
 
         public virtual async Task<List<TEntity>> GetAll(bool noTracking = true)
@@ -151,6 +164,11 @@ namespace Core.DataAccess.GenericRepository
         public Task<int> UpdateAsync(TEntity entity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filter)
+        {
+           return await dbContext.Set<TEntity>().SingleOrDefaultAsync(filter);
         }
     }
 }

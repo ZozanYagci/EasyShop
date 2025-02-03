@@ -18,7 +18,7 @@ namespace Core.DataAccess.EntityFramework
         int Add(IEnumerable<T> entities);
         Task<int> AddAsync(IEnumerable<T> entities);
 
-
+        Task<T> Get(Expression<Func<T, bool>> filter);
         Task<int> UpdateAsync(T entity);
         int Update(T entity);
 

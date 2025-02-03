@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
+using Core.Utilities.Exceptions;
 using DTOs.DTOs.UserDtos;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
@@ -12,39 +13,44 @@ namespace EasyShop.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IAuthService _authService;
 
-        public AuthController(IUserService userService)
+        public AuthController(IAuthService authService)
         {
-            this.userService = userService;
+            _authService = authService;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] AuthUser user, string password)
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
-            try
+            //try-catch gerek yok, global exception handler var
+
+            var userExist = await _authService.UserExists(userForRegisterDto.Email);
+            if (userExist)
             {
-                var result = await userService.RegisterAsync(user, password);
-                return Ok(result);
+                throw new UserAlreadyExistsException("Bu e-posta adresiyle kayıtlı bir kullanıcı zaten var.");
             }
-            catch (Exception ex)
+            //yeni kullanıcı
+            var registerResult = await _authService.RegisterAsync(userForRegisterDto, userForRegisterDto.Password);
+
+            //AccessToken 
+            var accessToken = await _authService.CreateAccessToken(registerResult);
+            return Ok(accessToken);
+        }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+        {
+
+            var userToLogin = await _authService.LoginAsync(userForLoginDto);
+            if (!userToLogin.Status)
             {
-                return BadRequest(ex.Message);
+                throw new UserNotFoundException("Kullanıcı bulunamadı!");
             }
+            var accessToken = await _authService.CreateAccessToken(userToLogin);
+
+            return Ok(accessToken);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserForLoginDto loginDto)
-        {
-            try
-            {
-                var result = await userService.LoginAsync(loginDto.Email, loginDto.Password);
-                return Ok(new { Token = result });
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-        }
     }
 }
+

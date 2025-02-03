@@ -1,9 +1,7 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
-using Core.Utilities.Security.Hashing;
-using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
-using Entities.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,65 +12,32 @@ namespace Business.Concrete
 {
     public class UserManager : IUserService
     {
-
         private readonly IUserDal _userDal;
-        private readonly ITokenHelper _tokenHelper;
 
-        public UserManager(IUserDal userDal, ITokenHelper tokenHelper)
+        public UserManager(IUserDal userDal)
         {
             _userDal = userDal;
-            _tokenHelper = tokenHelper;
         }
-        public Task AddAsync(AuthUser entity)
+
+        public async Task<int> AddAsync(AuthUser authUser)
         {
-            throw new NotImplementedException();
+            return await _userDal.AddAsync(authUser);
         }
 
-        public Task DeleteAsync(int id)
+        //public void Add(AuthUser authUser)
+        //{
+        //   _userDal.Add(authUser);
+        //}
+
+        public async Task<AuthUser> GetByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            
+            return await _userDal.Get(x => x.Email == email);
         }
 
-        public Task<List<AuthUser>> GetAllAsync(bool noTracking = true)
+        public async Task<List<OperationClaim>> GetClaims(AuthUser user)
         {
-            throw new NotImplementedException();
+            return await _userDal.GetClaim(user);
         }
-
-        public Task<AuthUser> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<AccessToken> LoginAsync(string email, string password)
-        {
-            var authUser = await _userDal.GetByEmailAsync(email);
-            if (authUser == null || !PasswordHasher.VerifyPassword(authUser.PasswordHash, password))
-            {
-                throw new UnauthorizedAccessException("Kullanıcı adı veya şifre hatalı");
-            }
-
-            var operationClaims = authUser.AuthUserOperationClaims.Select(uoc=>uoc.OperationClaim).ToList();
-            var token = _tokenHelper.CreateToken(authUser, operationClaims);
-            return token;
-        }
-
-        public async Task<string> RegisterAsync(AuthUser user, string password)
-        {
-            var existingUser = await _userDal.GetByEmailAsync(user.Email);
-            if (existingUser != null)
-            {
-                throw new Exception("Kullanıcı zaten mevcut");
-            }
-            user.PasswordHash = PasswordHasher.HashPassword(password);
-            await _userDal.AddAsync(user);
-            return "Kullanıcı başarıyla kaydoldu.";
-        }
-
-        public Task UpdateAsync(AuthUser entity)
-        {
-            throw new NotImplementedException();
-        }
-
-       
     }
 }

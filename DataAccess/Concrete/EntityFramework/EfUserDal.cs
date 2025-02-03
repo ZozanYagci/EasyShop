@@ -19,10 +19,15 @@ namespace DataAccess.Concrete.EntityFramework
             _context = context;
         }
 
-        public async Task<AuthUser> GetByEmailAsync(string email)
+        public async Task<List<OperationClaim>> GetClaim(AuthUser authUser)
         {
-            return await _context.Set<AuthUser>().FirstOrDefaultAsync(u => u.Email == email);
-        }
+                var result = from operationClaim in _context.OperationClaims
+                             join userOperationClaim in _context.AuthUserOperationClaims
+                                 on operationClaim.Id equals userOperationClaim.OperationClaimId
+                             where userOperationClaim.AuthUserId == authUser.Id
+                             select new OperationClaim { Id = operationClaim.Id, Name = operationClaim.Name };
+                return await result.ToListAsync();
 
+        }
     }
 }

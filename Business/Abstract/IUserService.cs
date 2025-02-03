@@ -1,5 +1,4 @@
 ﻿using Core.Entities.Concrete;
-using Core.Utilities.Security.JWT;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -9,9 +8,12 @@ using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
-    public interface IUserService:IGenericService<AuthUser>
+    public interface IUserService
     {
-        Task<string> RegisterAsync(AuthUser user, string password);
-        Task<AccessToken> LoginAsync(string email, string password);
+        Task<List<OperationClaim>> GetClaims(AuthUser user);
+        Task<AuthUser> GetByEmailAsync(string email);
+        //void Add(AuthUser authUser);
+        Task<int> AddAsync(AuthUser authUser);
+
     }
 }

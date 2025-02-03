@@ -1,6 +1,7 @@
 using Business.Abstract;
 using Business.Concrete;
 using Business.Mapping;
+using Core.Utilities.Middlewares;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
@@ -41,8 +42,9 @@ builder.Services.AddScoped<IProductDal, EfProductDal>();
 builder.Services.AddScoped<IFilterService, FilterManager>();
 builder.Services.AddScoped<IFilterDal, EfFilterDal>();
 
-builder.Services.AddScoped<IUserService, UserManager>();
+builder.Services.AddScoped<IAuthService, AuthManager>();
 builder.Services.AddScoped<IUserDal, EfUserDal>();
+builder.Services.AddScoped<IUserService, UserManager>();
 
 builder.Services.AddScoped<ITokenHelper ,JwtHelper>();
 
@@ -70,7 +72,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["TokenOptions:Issuer"],  // appsettings.json
             ValidAudience = builder.Configuration["TokenOptions:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenOptions:SecretKey"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenOptions:SecurityKey"]))
         };
     });
 
@@ -84,6 +86,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>(); //Global hata yönetimi
 
 app.UseHttpsRedirection();
 

@@ -11,6 +11,6 @@ namespace DataAccess.Abstract
 {
     public interface IUserDal:IGenericRepository<AuthUser>
     {
-        Task<AuthUser> GetByEmailAsync(string email);
+        Task<List<OperationClaim>> GetClaim(AuthUser authUser);
     }
 }
