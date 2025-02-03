@@ -10,7 +10,6 @@ namespace Core.Utilities.Exceptions
     public abstract class CustomExceptionBase:Exception
     {
         public abstract HttpStatusCode StatusCode { get; }
-        public virtual string CustomMessage { get; }
 
         protected CustomExceptionBase(string message) : base(message)
         {

@@ -25,7 +25,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<Context>(options=>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddSingleton<TokenOptions>(sp=>builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>());
+builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection("TokenOptions"));
 
 builder.Services.AddScoped<ICategoryService, CategoryManager>();
 builder.Services.AddScoped<ICategoryDal, EfCategoryDal>();
@@ -87,13 +87,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionMiddleware>(); //Global hata yönetimi
+
 
 app.UseHttpsRedirection();
 
 app.UseCors("MyPolicy");
+app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<ExceptionMiddleware>(); //Global hata yönetimi
 
 app.MapControllers();
 

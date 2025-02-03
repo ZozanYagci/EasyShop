@@ -10,7 +10,6 @@ namespace Core.Utilities.Exceptions
     public class InvalidPasswordException:CustomExceptionBase
     {
         public override HttpStatusCode StatusCode => HttpStatusCode.BadRequest;
-        public override string CustomMessage => "Geçersiz Şifre";
         public InvalidPasswordException(string message): base(message)
         {
 

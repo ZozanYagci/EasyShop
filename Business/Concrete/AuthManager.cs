@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Constants;
 using Core.Entities.Concrete;
 using Core.Utilities.Exceptions;
 using Core.Utilities.Security.Hashing;
@@ -36,11 +37,11 @@ namespace Business.Concrete
         public async Task<AuthUser> LoginAsync(UserForLoginDto loginDto)
         {
             var userToCheck = await _userService.GetByEmailAsync(loginDto.Email)
-                ?? throw new UserNotFoundException("Kullanıcı bulunamadı!");
+                ?? throw new UserNotFoundException(Messages.UserNotFound);
 
             if (!HashingHelper.VerifyPasswordHash(loginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
-                throw new InvalidPasswordException("Şifre hatalı!");
+                throw new InvalidPasswordException(Messages.PasswordError);
             }
 
             return userToCheck;
@@ -64,7 +65,7 @@ namespace Business.Concrete
             var existingUser = await _userService.GetByEmailAsync(user.Email);
             if (existingUser != null)
             {
-                throw new UserAlreadyExistsException("Kullanıcı zaten mevcut");
+                throw new UserAlreadyExistsException(Messages.UserAlreadyExists);
             }
 
             await _userService.AddAsync(user);

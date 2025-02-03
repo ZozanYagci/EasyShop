@@ -35,19 +35,12 @@ namespace Core.Utilities.Middlewares
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            int statusCode;
-            string message;
 
-            if (exception is CustomExceptionBase customException)
-            {
-                statusCode = (int)customException.StatusCode;
-                message = customException.CustomMessage;
-            }
-            else
-            {
-                statusCode = (int)HttpStatusCode.InternalServerError;
-                message =  $"Bilinmeyen hata: {exception.Message} - {exception.StackTrace}";
-            }
+            int statusCode = exception is CustomExceptionBase customException
+                ? (int)customException.StatusCode
+                : (int)HttpStatusCode.InternalServerError;
+
+            string message = exception.Message;
 
             var response = new
             {

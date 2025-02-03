@@ -10,7 +10,6 @@ namespace Core.Utilities.Exceptions
     public class UserAlreadyExistsException:CustomExceptionBase
     {
         public override HttpStatusCode StatusCode => HttpStatusCode.Conflict;
-        public override string CustomMessage => "Kullanıcı zaten mevcut";
         public UserAlreadyExistsException(string message) : base(message)
         {
                 

@@ -10,7 +10,6 @@ namespace Core.Utilities.Exceptions
     public class UserNotFoundException:CustomExceptionBase
     {
         public override HttpStatusCode StatusCode => HttpStatusCode.NotFound;
-        public override string CustomMessage => "Kullanıcı Bulunamadı";
         public UserNotFoundException(string message): base(message)
         {
                 

@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Constants;
 using Core.Entities.Concrete;
 using Core.Utilities.Exceptions;
 using DTOs.DTOs.UserDtos;
@@ -28,7 +29,7 @@ namespace EasyShop.Api.Controllers
             var userExist = await _authService.UserExists(userForRegisterDto.Email);
             if (userExist)
             {
-                throw new UserAlreadyExistsException("Bu e-posta adresiyle kayıtlı bir kullanıcı zaten var.");
+                throw new UserAlreadyExistsException(Messages.UserAlreadyExists);
             }
             //yeni kullanıcı
             var registerResult = await _authService.RegisterAsync(userForRegisterDto, userForRegisterDto.Password);
@@ -44,7 +45,7 @@ namespace EasyShop.Api.Controllers
             var userToLogin = await _authService.LoginAsync(userForLoginDto);
             if (!userToLogin.Status)
             {
-                throw new UserNotFoundException("Kullanıcı bulunamadı!");
+                throw new UserNotFoundException(Messages.UserNotFound);
             }
             var accessToken = await _authService.CreateAccessToken(userToLogin);
 
