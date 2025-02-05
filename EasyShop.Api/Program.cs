@@ -1,10 +1,14 @@
 using Business.Abstract;
 using Business.Concrete;
 using Business.Mapping;
+using Business.ValidationRules.FluentValidation;
 using Core.Utilities.Middlewares;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
+using DTOs.DTOs.UserDtos;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,15 +18,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<UserForLoginValidator>();
+
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddDbContext<Context>(options=>
+builder.Services.AddDbContext<Context>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection("TokenOptions"));
@@ -46,7 +56,7 @@ builder.Services.AddScoped<IAuthService, AuthManager>();
 builder.Services.AddScoped<IUserDal, EfUserDal>();
 builder.Services.AddScoped<IUserService, UserManager>();
 
-builder.Services.AddScoped<ITokenHelper ,JwtHelper>();
+builder.Services.AddScoped<ITokenHelper, JwtHelper>();
 
 
 //Add Cors
@@ -77,7 +87,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
-
 
 
 // Configure the HTTP request pipeline.
