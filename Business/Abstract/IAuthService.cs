@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Concrete;
+using Core.Utilities.Results;
 using Core.Utilities.Security.JWT;
 using DTOs.DTOs.UserDtos;
 using Entities.Concrete;
@@ -12,8 +13,8 @@ namespace Business.Abstract
 {
     public interface IAuthService
     {
-        Task<AuthUser> RegisterAsync(UserForRegisterDto registerDto, string password);
-        Task<AuthUser> LoginAsync(UserForLoginDto loginDto);
+        Task<ServiceResponse<AccessToken>> RegisterAsync(UserForRegisterDto registerDto, string password);
+        Task<ServiceResponse<AccessToken>> LoginAsync(UserForLoginDto loginDto);
         Task<bool> UserExists(string email);
         Task<AccessToken> CreateAccessToken(AuthUser user);
     }

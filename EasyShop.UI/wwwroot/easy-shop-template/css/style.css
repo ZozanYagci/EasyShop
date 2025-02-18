@@ -9706,6 +9706,15 @@ a.text-dark:hover, a.text-dark:focus {
   animation: action 1s infinite alternate;
 }
 
+#toastContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+    display: block !important;
+}
+
+
 @keyframes action {
   0% {
     transform: translateY(0);

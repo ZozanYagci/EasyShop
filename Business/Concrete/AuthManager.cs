@@ -2,6 +2,7 @@
 using Business.Constants;
 using Core.Entities.Concrete;
 using Core.Utilities.Exceptions;
+using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
@@ -34,7 +35,7 @@ namespace Business.Concrete
             return accessToken;
         }
 
-        public async Task<AuthUser> LoginAsync(UserForLoginDto loginDto)
+        public async Task<ServiceResponse<AccessToken>> LoginAsync(UserForLoginDto loginDto)
         {
             var userToCheck = await _userService.GetByEmailAsync(loginDto.Email)
                 ?? throw new UserNotFoundException(Messages.UserNotFound);
@@ -44,11 +45,19 @@ namespace Business.Concrete
                 throw new InvalidPasswordException(Messages.PasswordError);
             }
 
-            return userToCheck;
+            var accessToken=await CreateAccessToken(userToCheck);
+
+            return new ServiceResponse<AccessToken>
+            {
+                Data = accessToken,
+                Success = true,
+                Message = Messages.SuccessfulLogin
+            };
         }
 
-        public async Task<AuthUser> RegisterAsync(UserForRegisterDto registerDto, string password)
+        public async Task<ServiceResponse<AccessToken>> RegisterAsync(UserForRegisterDto registerDto, string password)
         {
+
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
             var user = new AuthUser
@@ -61,15 +70,16 @@ namespace Business.Concrete
                 Status = true
             };
 
-
-            var existingUser = await _userService.GetByEmailAsync(user.Email);
-            if (existingUser != null)
-            {
-                throw new UserAlreadyExistsException(Messages.UserAlreadyExists);
-            }
-
             await _userService.AddAsync(user);
-            return user;
+            
+            var accessToken = await CreateAccessToken(user);
+
+            return new ServiceResponse<AccessToken>
+            {
+                Data = accessToken,
+                Success = true,
+                Message = Messages.UserRegistered
+            };
         }
 
         public async Task<bool> UserExists(string email)

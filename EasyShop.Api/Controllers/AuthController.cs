@@ -33,23 +33,21 @@ namespace EasyShop.Api.Controllers
             }
             //yeni kullanıcı
             var registerResult = await _authService.RegisterAsync(userForRegisterDto, userForRegisterDto.Password);
-
-            //AccessToken 
-            var accessToken = await _authService.CreateAccessToken(registerResult);
-            return Ok(accessToken);
+            if(!registerResult.Success)
+            {
+                return BadRequest(registerResult.Message);
+            }
+            return Ok(registerResult.Data);
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-
             var userToLogin = await _authService.LoginAsync(userForLoginDto);
-            if (!userToLogin.Status)
+            if(!userToLogin.Success)
             {
-                throw new UserNotFoundException(Messages.UserNotFound);
+                return BadRequest(userToLogin.Message);
             }
-            var accessToken = await _authService.CreateAccessToken(userToLogin);
-
-            return Ok(accessToken);
+            return Ok(userToLogin.Data);
         }
 
     }
