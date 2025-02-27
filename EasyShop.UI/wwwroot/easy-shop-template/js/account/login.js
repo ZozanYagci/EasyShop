@@ -14,7 +14,7 @@
         }
 
         const loginData = { email, password };
-        const data = await sendRequest('https://localhost:44372/api/Auth/login', 'POST', loginData);
+        const data = await sendRequest('https://localhost:7090/api/Auth/login', 'POST', loginData);
 
         if (data && data.token) { 
             showToast("Giriş başarılı! Hoş geldiniz.", "success");

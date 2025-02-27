@@ -20,7 +20,7 @@ namespace EasyShop.UI.ViewComponents.UILayoutViewComponents
         {
             var viewModel = new NavbarViewModel();
             var client = _httpClientFactory.CreateClient();
-            var responseMessageCategories = await client.GetAsync("https://localhost:44372/api/Categories");
+            var responseMessageCategories = await client.GetAsync("https://localhost:7090/api/Categories");
             if (responseMessageCategories.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessageCategories.Content.ReadAsStringAsync();
@@ -28,7 +28,7 @@ namespace EasyShop.UI.ViewComponents.UILayoutViewComponents
                
             }
 
-            var responseMessageSubCategories = await client.GetAsync("https://localhost:44372/api/SubCategories/GetSubCategoryByCategoryId");
+            var responseMessageSubCategories = await client.GetAsync("https://localhost:7090/api/SubCategories/GetSubCategoryByCategoryId");
             if (responseMessageSubCategories.IsSuccessStatusCode)
             {
                 var jsonData2= await responseMessageSubCategories.Content.ReadAsStringAsync();

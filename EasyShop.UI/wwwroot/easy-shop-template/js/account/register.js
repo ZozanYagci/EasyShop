@@ -17,7 +17,7 @@
         }
 
         const registerData = { firstName, lastName, email, password };
-        const data = await sendRequest('https://localhost:44372/api/Auth/register', 'POST', registerData);
+        const data = await sendRequest('https://localhost:7090/api/Auth/register', 'POST', registerData);
         /*if (data?.success) {*/
         if (data && data.token) {
             showToast("Kayıt başarılı! Giriş yapabilirsiniz.", "success");

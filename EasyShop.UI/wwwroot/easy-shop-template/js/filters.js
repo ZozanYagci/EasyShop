@@ -3,7 +3,7 @@
 });
 
 function getAllProducts() {
-    fetch("https://localhost:44372/api/Products/ProductWithPrices", {
+    fetch("https://localhost:7090/api/Products/ProductWithPrices", {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     })
@@ -76,7 +76,7 @@ function applyFilters() {
 
 
     //AJAX çağrısı
-    fetch("https://localhost:44372/api/Filters/filtered-products", {
+    fetch("https://localhost:7090/api/Filters/filtered-products", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(filterRequest)

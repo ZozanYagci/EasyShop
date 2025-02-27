@@ -62,7 +62,7 @@ builder.Services.AddScoped<ITokenHelper, JwtHelper>();
 //Add Cors
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-    builder.AllowAnyOrigin()
+    builder.WithOrigins("https://localhost:7118")
            .AllowAnyMethod()
            .AllowAnyHeader();
 
