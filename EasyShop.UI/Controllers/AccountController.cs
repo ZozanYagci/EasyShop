@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using Core.Utilities.ApiClients;
 using DTOs.DTOs.UserDtos;
+using EasyShop.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyShop.UI.Controllers
@@ -15,7 +16,7 @@ namespace EasyShop.UI.Controllers
         }
         public IActionResult Index(string tab = "login")
         {
-            ViewData["ActiveTab"] = tab;
+            ViewData["ActiveTab"] = TempData["ActiveTab"] ?? tab;
             return View();
         }
 
@@ -30,11 +31,7 @@ namespace EasyShop.UI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "";
-                foreach (var error in ModelState.Values.SelectMany(x => x.Errors))
-                {
-                    TempData["Error"] += error.ErrorMessage + "\n";
-                }
+                TempData["Error"] = ExtractErrorsFromModelState();
                 return View(userForLoginDto);
             }
             try
@@ -43,7 +40,7 @@ namespace EasyShop.UI.Controllers
 
                 if (string.IsNullOrEmpty(result.Token))
                 {
-                    TempData["Error"] = "Geçersiz kullanıcı adı veya şifre";
+                    ModelState.AddModelError(string.Empty, "Geçersiz kullanıcı veya şifre");
                     return View(userForLoginDto);
                 }
 
@@ -72,11 +69,7 @@ namespace EasyShop.UI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "";
-                foreach (var error in ModelState.Values.SelectMany(x => x.Errors))
-                {
-                    TempData["Error"] += error.ErrorMessage + "\n";
-                }
+                TempData["Error"] = ExtractErrorsFromModelState();
                 return View(userForRegisterDto);
             }
 
@@ -89,7 +82,7 @@ namespace EasyShop.UI.Controllers
                     return View(userForRegisterDto);
                 }
                 TempData["Success"] = "Kayıt başarılı! Şimdi giriş yapabilirsiniz.";
-                return RedirectToAction("Login");
+                return RedirectToAction("Index", new { tab = "login" });
 
             }
             catch (Exception ex)
@@ -100,6 +93,11 @@ namespace EasyShop.UI.Controllers
 
                 return View(userForRegisterDto);
             }
+        }
+        private string ExtractErrorsFromModelState()
+        {
+            var errors = ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage);
+            return string.Join("\n", errors);
         }
     }
 }
