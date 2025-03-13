@@ -1,4 +1,4 @@
-﻿@* @model Tuple<List<CategoryListDto>, List<GetSubCategoryByCategoryIdDto>> *@
+﻿@* @model Tuple<List<CategoryListDto>, List<GetSubCategoryByCategoryIdDto>> *@  
     @model NavbarViewModel
 
 
@@ -29,9 +29,9 @@
                                 </div>
                             </div>
                         }
-                   
+
                     }
-           
+
                 </div>
             </nav>
         </div>
@@ -46,7 +46,7 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                     
+
                         <a href="/Default/Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Default" ? "active" : "")">Anasayfa</a>
                         <a href="/Product/Index" class="nav-item nav-link @(ViewData["ActivePage"]?.ToString() == "Product" ? "active" : "")">Ürünler</a>
                         <a href="detail.html" class="nav-item nav-link">Ürün Detayları</a>
@@ -59,21 +59,37 @@
                         </div>
                         <a href="contact.html" class="nav-item nav-link">İletişim</a>
                     </div>
-                    <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                        <a href="/Account/Index" class="btn px-0 mx-2">
-                            <i class="fa fa-user text-primary" aria-hidden="true"></i>
-                            <span class="badge text-secondary" style="padding-bottom: 2px;">Giriş Yap</span>
-                        </a>
 
-                        <a href="" class="btn px-0 mx-2">
-                            <i class="fas fa-heart text-primary"></i>
-                            <span class="badge text-secondary" style="padding-bottom: 2px;">Favorilerim 0</span>
-                        </a>
-                        <a href="" class="btn px-0 mx-2">
-                            <i class="fas fa-shopping-cart text-primary"></i>
-                            <span class="badge text-secondary" style="padding-bottom: 2px;">Sepetim 0</span>
-                        </a>
+                    <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+
+                       @if (User.Identity.IsAuthenticated)
+                        {
+                            <form id="logoutForm" method="post" action="/Account/Logout">
+                                <button type="submit" class="btn px-0 mx-2">
+                                    <i class="fa fa-sign-out-alt text-primary"></i>
+                                    <span class="badge text-secondary" style="padding-bottom: 2px;">Çıkış Yap</span>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a href="/Account/Index" class="btn px-0 mx-2">
+                                <i class="fa fa-user text-primary" aria-hidden="true"></i>
+                                <span class="badge text-secondary" style="padding-bottom: 2px;">Giriş Yap</span>
+                            </a>
+                        }
                     </div>
+                    @*                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block"> *@
+
+
+                    <a href="" class="btn px-0 mx-2">
+                        <i class="fas fa-heart text-primary"></i>
+                        <span class="badge text-secondary" style="padding-bottom: 2px;">Favorilerim 0</span>
+                    </a>
+                    <a href="" class="btn px-0 mx-2">
+                        <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge text-secondary" style="padding-bottom: 2px;">Sepetim 0</span>
+                    </a>
                 </div>
             </nav>
         </div>

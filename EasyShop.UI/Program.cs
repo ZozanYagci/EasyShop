@@ -7,18 +7,13 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDistributedMemoryCache();
+//builder.Services.AddDistributedMemoryCache();
 
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
 
 builder.Services.AddHttpContextAccessor();
 
@@ -51,6 +46,16 @@ builder.Services.AddScoped<ITokenHelper, JwtHelper>();
 builder.Services.AddDbContext<Context>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.HttpOnly = true; // çerez sadece sunucu tarafýnda
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.LoginPath = "/Account/Index";
+        options.LogoutPath = "/Account/Logout";
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -66,8 +71,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession();
+//app.UseSession();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 //Razor page endpoint

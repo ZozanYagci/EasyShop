@@ -1,103 +1,55 @@
-﻿using Azure.Core;
-using Core.Utilities.ApiClients;
+﻿using Core.Utilities.ApiClients;
+using Core.Utilities.Security.JWT;
 using DTOs.DTOs.UserDtos;
 using EasyShop.UI.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EasyShop.UI.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ApiClient _apiClient;
-
-        public AccountController(ApiClient apiClient)
-        {
-            _apiClient = apiClient;
-        }
         public IActionResult Index(string tab = "login")
         {
             ViewData["ActiveTab"] = TempData["ActiveTab"] ?? tab;
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Login()
+        [HttpPost]
+        public async Task<IActionResult> SetAuthCookie([FromBody] AccessToken accessToken)
         {
-            return View();
+            if (string.IsNullOrEmpty(accessToken.Token))
+            {
+                return BadRequest(new { message = "Geçersiz token" });
+            }
+
+            var claims = new List<Claim>
+            {
+            new Claim(ClaimTypes.Name, accessToken.Token)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true, // Çerezin uzun süreli olmasını istersen
+                ExpiresUtc = DateTime.UtcNow.AddMinutes(30) // Token süresi 30 dk 
+            };
+
+            // Kimlik doğrulama çerezi oluştur
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+            return Ok(new { message = "Token başarıyla saklandı" });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+        public async Task<IActionResult> Logout()
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = ExtractErrorsFromModelState();
-                return View(userForLoginDto);
-            }
-            try
-            {
-                var result = await _apiClient.PostAsync<AccessToken>("Auth/login", userForLoginDto);
-
-                if (string.IsNullOrEmpty(result.Token))
-                {
-                    ModelState.AddModelError(string.Empty, "Geçersiz kullanıcı veya şifre");
-                    return View(userForLoginDto);
-                }
-
-                //Token'ı Session'a kaydet
-                HttpContext.Session.SetString("JWT", result.Token);
-                TempData["Success"] = "Giriş başarılı!";
-                return RedirectToAction("Index", "Default");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Giriş sırasında bir hata oluştu.";
-
-                return View(userForLoginDto);
-                //TODO: logger 
-            }
-        }
-
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = ExtractErrorsFromModelState();
-                return View(userForRegisterDto);
-            }
-
-            try
-            {
-                var result = await _apiClient.PostAsync<AccessToken>("Auth/register", userForRegisterDto);
-                if (string.IsNullOrEmpty(result.Token))
-                {
-                    TempData["Error"] = "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyiniz.";
-                    return View(userForRegisterDto);
-                }
-                TempData["Success"] = "Kayıt başarılı! Şimdi giriş yapabilirsiniz.";
-                return RedirectToAction("Index", new { tab = "login" });
-
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Bir hata meydana geldi.";
-
-                //TODO: logger
-
-                return View(userForRegisterDto);
-            }
-        }
-        private string ExtractErrorsFromModelState()
-        {
-            var errors = ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage);
-            return string.Join("\n", errors);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Default");
         }
     }
+
+
 }

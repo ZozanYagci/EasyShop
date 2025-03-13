@@ -25,11 +25,27 @@
 
         if (data && data.token) {
             showToast("Giriş başarılı! Hoş geldiniz.", "success");
-            loginForm.reset();
-            // Ana sayfaya 3 sn sonra yönlendir 
-            setTimeout(() => {
-                window.location.replace('/Default/Index');
-            }, 3000);
+
+             const setAuthCookieResponse= await fetch("/Account/SetAuthCookie", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                 },
+                 body: JSON.stringify({ token: data.token }),
+                 credentials: "include"
+                 
+            });
+
+            if (setAuthCookieResponse.ok) {
+
+                loginForm.reset();
+                // Ana sayfaya 3 sn sonra yönlendir 
+                setTimeout(() => {
+                    window.location.replace('/Default/Index');
+                }, 3000);
+            } else { // Test
+                showToast("Oturum kaydedilmedi. Lütfen tekrar deneyin", "danger");
+            }
         } else if (data?.errors) {
 
 
