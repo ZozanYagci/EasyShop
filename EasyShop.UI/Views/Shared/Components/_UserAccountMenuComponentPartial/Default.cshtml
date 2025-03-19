@@ -1,0 +1,55 @@
+﻿@if (User.Identity.IsAuthenticated)
+
+{
+    <li class="nav-item dropdown d-flex align-items-center">
+        <a href="#" class="btn px-0 mx-2 class=nav-link dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-user text-primary" aria-hidden="true"></i>
+            <span class="badge text-secondary" style="padding-bottom: 2px;">Hesabım</span>
+        </a>
+        <div class="dropdown-menu bg-light rounded-0 border-0 m-0">
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-box text-warning mr-2"></i> Tüm Siparişlerim
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-star text-warning mr-2"></i> Değerlendirmelerim
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-comments text-warning mr-2"></i> Satıcı Mesajlarım
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-credit-card text-warning mr-2"></i> Krediler
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-gift text-warning mr-2"></i> Şanslı Çekiliş
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-ticket-alt text-warning mr-2"></i> İndirim Kuponlarım
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-user-circle text-warning mr-2"></i> Kullanıcı Bilgilerim
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-crown text-warning mr-2"></i> Easy Shop Elite
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fa fa-headset text-warning mr-2"></i> Easy Shop Asistan
+            </a>
+
+            <form id="logoutForm" method="post" action="/Account/Logout">
+                <button type="submit" class="btn px-0 mx-2">
+                    <i class="fa fa-sign-out-alt text-warning"></i>
+                    <span class="text-dark" style="padding-bottom: 2px;">Çıkış Yap</span>
+                </button>
+            </form>
+        </div>
+    </li>
+}
+
+else
+{
+    <a href="/Account/Index" class="btn px-0 mx-2">
+        <i class="fa fa-user text-primary" aria-hidden="true"></i>
+        <span class="badge text-secondary" style="padding-bottom: 2px;">Giriş Yap</span>
+    </a>
+}
+
