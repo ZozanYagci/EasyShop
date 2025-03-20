@@ -21,13 +21,18 @@ namespace DataAccess.Concrete.EntityFramework
 
         public async Task<List<OperationClaim>> GetClaim(AuthUser authUser)
         {
-                var result = from operationClaim in _context.OperationClaims
-                             join userOperationClaim in _context.AuthUserOperationClaims
-                                 on operationClaim.Id equals userOperationClaim.OperationClaimId
-                             where userOperationClaim.AuthUserId == authUser.Id
-                             select new OperationClaim { Id = operationClaim.Id, Name = operationClaim.Name };
-                return await result.ToListAsync();
+            var result = from operationClaim in _context.OperationClaims
+                         join userOperationClaim in _context.AuthUserOperationClaims
+                             on operationClaim.Id equals userOperationClaim.OperationClaimId
+                         where userOperationClaim.AuthUserId == authUser.Id
+                         select new OperationClaim { Id = operationClaim.Id, Name = operationClaim.Name };
+            return await result.ToListAsync();
 
+        }
+
+        public async Task<AuthUser> GetUserByEmailAsync(string email)
+        {
+            return await _context.Set<AuthUser>().FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

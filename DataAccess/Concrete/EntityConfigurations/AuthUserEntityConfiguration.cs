@@ -27,6 +27,10 @@ namespace DataAccess.Concrete.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(100);
 
+            builder.Property(u => u.Phone)
+                 .HasMaxLength(15)
+                 .IsRequired(false);
+
             builder.Property(u => u.PasswordHash)
                 .IsRequired();
 

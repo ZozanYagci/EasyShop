@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Core.Entities.Concrete;
 using DTOs.DTOs.ProductDtos;
 using DTOs.DTOs.SubCategoryDtos;
+using DTOs.DTOs.UserDtos;
 using EasyShop.DTOs.DTOs.CategoryDtos;
 using Entities.Concrete;
 using System;
@@ -35,6 +37,8 @@ namespace Business.Mapping
                 .ForMember(x => x.ImageUrl, y => y.MapFrom(z => z.ImageUrl));
 
             CreateMap<ProductDetail, ProductDetailsDto>().ReverseMap();
+
+            CreateMap<UserProfileUpdateDto, AuthUser>().ReverseMap();
         }
     }
 }

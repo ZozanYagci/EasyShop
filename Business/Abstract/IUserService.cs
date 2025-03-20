@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Concrete;
+using DTOs.DTOs.UserDtos;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Business.Abstract
         Task<AuthUser> GetByEmailAsync(string email);
         //void Add(AuthUser authUser);
         Task<int> AddAsync(AuthUser authUser);
+        Task<int> UpdateUserAsync(int userId, UserProfileUpdateDto userUpdate);   
 
     }
 }

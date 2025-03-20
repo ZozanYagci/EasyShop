@@ -161,9 +161,11 @@ namespace Core.DataAccess.GenericRepository
             throw new NotImplementedException();
         }
 
-        public Task<int> UpdateAsync(TEntity entity)
+        public async Task<int> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+
+            dbContext.Set<TEntity>().Update(entity);
+            return await dbContext.SaveChangesAsync();
         }
 
         public async Task<TEntity> Get(Expression<Func<TEntity, bool>> filter)

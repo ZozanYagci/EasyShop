@@ -11,9 +11,10 @@ namespace Core.Extensions
 
     public static class ClaimsPrincipalExtensions
     {
-        public static string GetUserId(this ClaimsPrincipal user)
+        public static int GetUserId(this ClaimsPrincipal user)
         {
-            return user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdStr = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return int.TryParse(userIdStr, out var userId) ? userId : 0;
         }
 
         public static string GetEmail(this ClaimsPrincipal user)
