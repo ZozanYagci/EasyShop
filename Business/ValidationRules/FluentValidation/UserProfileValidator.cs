@@ -19,7 +19,9 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(x => x.Email).NotEmpty().WithMessage("E-posta boş bırakılamaz")
                 .EmailAddress().WithMessage("Geçerli bir e-posta adresi giriniz");
 
-            RuleFor(x => x.Phone).Matches(@"\d{10}$").WithMessage("Geçerli bir telefon numarası giriniz");
+
+            RuleFor(x => x.Phone).NotEmpty().WithMessage("Telefon bilgisi boş bırakılamaz.")
+                .Matches(@"^\d{10}$").WithMessage("Geçerli bir telefon numarası giriniz");
         }
     }
 }

@@ -7,8 +7,10 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using FluentValidation.Resources;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +26,14 @@ builder.Services.AddRazorPages();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddFluentValidationAutoValidation()
-    .AddFluentValidationClientsideAdapters();
+builder.Services.AddFluentValidationAutoValidation(opt =>
+{
+    opt.DisableDataAnnotationsValidation = true;
+});
+builder.Services.AddFluentValidationClientsideAdapters();
 
-builder.Services.AddValidatorsFromAssemblyContaining<UserForLoginValidator>();
+
+builder.Services.AddValidatorsFromAssembly(typeof(UserProfileValidator).Assembly);
 
 
 builder.Services.AddHttpClient();
@@ -89,6 +95,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-   
+
 
 app.Run();

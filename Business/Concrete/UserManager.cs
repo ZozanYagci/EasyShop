@@ -42,6 +42,15 @@ namespace Business.Concrete
             return await _userDal.Get(x => x.Email == email);
         }
 
+        public async Task<UserProfileUpdateDto> GetByIdAsync(int id)
+        {
+            var user = await _userDal.Get(u => u.Id == id);
+            if (user == null)
+                throw new UserNotFoundException(Messages.UserNotFound);
+
+            return _mapper.Map<UserProfileUpdateDto>(user);
+        }
+
         public async Task<List<OperationClaim>> GetClaims(AuthUser user)
         {
             return await _userDal.GetClaim(user);

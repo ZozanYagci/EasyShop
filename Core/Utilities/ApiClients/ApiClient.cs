@@ -53,5 +53,22 @@ namespace Core.Utilities.ApiClients
 
         }
 
+        public async Task<T> PutAsync<T>(string endpoint, object data)
+        {
+            var client = httpClientFactory.CreateClient();
+            var baseUrl = configuration["ApiSettings:BaseUrl"];
+            var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+            var response = await client.PutAsync($"{baseUrl}{endpoint}", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonData = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(jsonData);
+            }
+
+            throw new Exception($"API çağrısı başarısız oldu: {response.StatusCode}, Detay: {await response.Content.ReadAsStringAsync()}");
+        }
+
     }
 }
