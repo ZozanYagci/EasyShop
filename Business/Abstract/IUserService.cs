@@ -17,6 +17,6 @@ namespace Business.Abstract
         Task<int> AddAsync(AuthUser authUser);
         Task<int> UpdateUserAsync(int userId, UserProfileUpdateDto userUpdate);   
 
-        Task<UserProfileUpdateDto> GetByIdAsync(int id)
+        Task<UserProfileUpdateDto> GetByIdAsync(int id);
     }
 }

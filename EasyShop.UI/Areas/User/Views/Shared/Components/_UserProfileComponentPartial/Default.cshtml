@@ -1,5 +1,6 @@
 ﻿@model UserProfileUpdateDto
 
+
 <div class="container mt-4">
     <h2 class="mb-4">Kullanıcı Bilgilerim</h2>
 
@@ -9,12 +10,11 @@
             <div class="card p-4">
                 <h5 class="text-warning">Üyelik Bilgilerim</h5>
 
-
-                <div class="alert alert-success" style="display: none;"></div>
-                <div class="alert alert-danger" style="display: none;"></div>
-
                 <form id="editProfileForm" method="post" asp-action="Edit">
                     @Html.AntiForgeryToken()
+
+                    <div class="alert alert-success" style="display: none;"></div>
+                    <div class="alert alert-danger" style="display: none;"></div>
 
                     <div class="form-group">
 
@@ -113,9 +113,9 @@
                e.preventDefault();
 
                $(".alert-success, .alert-danger").hide();
-               $("span.text-danger").text(""); 
-              
-            
+               $("span.text-danger").text("");
+
+
                 let formData = $(this).serialize();
                 let actionUrl = $(this).attr("action");
 
@@ -124,25 +124,25 @@
                    type: "POST",
                    data: formData,
                    success: function (response) {
-                       
+
                     $(".alert-success").text(response.message).show();
                     $(".alert-danger").hide();
-                    
+
                    },
 
                    error: function (xhr) {
 
                         $(".alert-success").hide();
-                       
-              
+
+
                         if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.errors) {
                            let errors = xhr.responseJSON.errors;
 
                            for (let field in errors) {
-                           
+
                                let errorMessages = errors[field].map(msg => `<li>${msg}</li>`).join("");
                                let errorSpan = $(`span[data-valmsg-for="${field}"]`);
-      
+
                                if (errorSpan.length) {
                                errorSpan.html(`<ul>${errorMessages}</ul>`);
                                }
@@ -169,3 +169,5 @@
         });
     });
 </script>
+
+

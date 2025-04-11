@@ -40,6 +40,15 @@ namespace EasyShop.UI.Controllers
             // Kimlik doğrulama çerezi oluştur
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
+            Response.Cookies.Append("accessToken", accessToken.Token, new CookieOptions
+            {
+                HttpOnly=true,
+                Secure = true,
+                SameSite=SameSiteMode.None,
+                Expires=DateTime.UtcNow.AddMinutes(30), 
+                IsEssential=true
+            });
+
             return Ok(new { message = "Token başarıyla saklandı" });
         }
 

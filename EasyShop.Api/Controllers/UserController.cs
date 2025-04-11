@@ -2,6 +2,7 @@
 using Business.Constants;
 using Core.Extensions;
 using Core.Utilities.Exceptions;
+using Core.Utilities.Results;
 using DTOs.DTOs.UserDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,7 @@ namespace EasyShop.Api.Controllers
             return Ok(user);
         }
 
-        [HttpPut("user-profile")]
+        [HttpPut("update-profile")]
         public async Task<IActionResult> UpdateProfileAsync([FromBody] UserProfileUpdateDto userForUpdateDto)
         {
             if (!ModelState.IsValid)
@@ -41,7 +42,7 @@ namespace EasyShop.Api.Controllers
                         kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
                     );
 
-                return BadRequest(new { errors });
+                return BadRequest(new { Errors = errors });
             }
 
             var userId = User.GetUserId(); // extension'dan çağırıyoruz
@@ -50,10 +51,11 @@ namespace EasyShop.Api.Controllers
 
             if (result > 0)
             {
-                return Ok(new { Message = "Bilgileriniz başarıyla güncellendi." });
+               return Ok(new { Success = true, Message = "Bilgileriniz başarıyla güncellendi." });
+                
             }
 
-            return BadRequest(new { Message = "Güncelleme başarısız" });
+            return BadRequest(new { Success = false, Message = "Güncelleme başarısız" });
 
         }
 

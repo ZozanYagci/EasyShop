@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 
 namespace Core.Utilities.ApiClients
@@ -9,17 +11,33 @@ namespace Core.Utilities.ApiClients
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IConfiguration configuration;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public ApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public ApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             this.httpClientFactory = httpClientFactory;
             this.configuration = configuration;
+            this.httpContextAccessor = httpContextAccessor;
+        }
+
+        //Header'a Authorization: Bearer <token>
+        //API, bu token'ı kontrol edip sadece doğrulanmış kullanıcıya veri döndürecek.
+        private void AddAuthorizationHeader(HttpClient client)
+        {
+            var accessToken = httpContextAccessor.HttpContext?.Request?.Cookies["accessToken"];
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            }
         }
 
         //Get isteği
         public async Task<T> GetAsync<T>(string endpoint)
         {
             var client = httpClientFactory.CreateClient();
+
+            AddAuthorizationHeader(client);
+
             var baseUrl = configuration["ApiSettings:BaseUrl"];
 
             var response = await client.GetAsync($"{baseUrl}{endpoint}");
@@ -38,6 +56,9 @@ namespace Core.Utilities.ApiClients
         public async Task<T> PostAsync<T>(string endpoint, object data)
         {
             var client = httpClientFactory.CreateClient();
+
+            AddAuthorizationHeader(client);
+
             var baseUrl = configuration["ApiSettings:BaseUrl"];
             var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
@@ -56,6 +77,9 @@ namespace Core.Utilities.ApiClients
         public async Task<T> PutAsync<T>(string endpoint, object data)
         {
             var client = httpClientFactory.CreateClient();
+
+            AddAuthorizationHeader(client);
+
             var baseUrl = configuration["ApiSettings:BaseUrl"];
             var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
