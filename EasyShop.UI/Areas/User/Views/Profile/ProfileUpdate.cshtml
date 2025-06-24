@@ -1,0 +1,43 @@
+﻿@model UserProfileUpdateDto
+
+<div class="card p-4">
+    <h5 class="text-warning">Üyelik Bilgilerim</h5>
+
+    <form id="editProfileForm" method="post" asp-action="ProfileUpdate">
+        @Html.AntiForgeryToken()
+
+        <div class="alert alert-success profile-alert-success" style="display: none;"></div>
+        <div class="alert alert-danger profile-alert-error" style="display: none;"></div>
+
+        <div class="form-group">
+
+            <label asp-for="FirstName">Ad</label>
+            <input asp-for="FirstName" class="form-control">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LastName">Soyad</label>
+            <input asp-for="LastName" class="form-control">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email">E-Mail</label>
+            <input asp-for="Email" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Phone">Cep Telefonu</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">+90</span>
+                </div>
+                <input asp-for="Phone" class="form-control">
+            </div>
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-warning">Güncelle</button>
+    </form>
+</div>

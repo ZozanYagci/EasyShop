@@ -42,11 +42,11 @@ namespace EasyShop.UI.Controllers
 
             Response.Cookies.Append("accessToken", accessToken.Token, new CookieOptions
             {
-                HttpOnly=true,
+                HttpOnly = true,
                 Secure = true,
-                SameSite=SameSiteMode.None,
-                Expires=DateTime.UtcNow.AddMinutes(30), 
-                IsEssential=true
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                IsEssential = true
             });
 
             return Ok(new { message = "Token başarıyla saklandı" });

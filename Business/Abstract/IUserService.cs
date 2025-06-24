@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Concrete;
+using Core.Utilities.Results;
 using DTOs.DTOs.UserDtos;
 using Entities.Concrete;
 using System;
@@ -18,5 +19,7 @@ namespace Business.Abstract
         Task<int> UpdateUserAsync(int userId, UserProfileUpdateDto userUpdate);   
 
         Task<UserProfileUpdateDto> GetByIdAsync(int id);
+
+        Task<IResult> ChangePasswordAsync(int userId, ChangePasswordDto changePassword);
     }
 }

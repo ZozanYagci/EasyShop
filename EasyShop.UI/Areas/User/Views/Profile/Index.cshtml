@@ -1,11 +1,31 @@
-﻿
+﻿@model UserProfileViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UILayout.cshtml";
 }
 
+<div class="container mt-4">
+    <h2 class="mb-4">Kullanıcı Bilgilerim</h2>
 
-@await Component.InvokeAsync("_UserProfileComponentPartial")
+    <div class="row">
+        <!-- Üyelik Bilgilerim -->
+        <div class="col-md-6">
+            @Html.Partial("ProfileUpdate", Model.ProfileUpdate)
+        </div>
+
+        <!-- Şifre Güncelleme -->
+        <div class="col-md-6">
+          @Html.Partial("ChangePassword", Model.ChangePassword)
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/easy-shop-template/js/user-profile/profile.js"></script>
+}
+
+
 
 
 

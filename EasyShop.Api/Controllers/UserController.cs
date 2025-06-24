@@ -51,12 +51,34 @@ namespace EasyShop.Api.Controllers
 
             if (result > 0)
             {
-               return Ok(new { Success = true, Message = "Bilgileriniz başarıyla güncellendi." });
-                
+                return Ok(new { Success = true, Message = "Bilgileriniz başarıyla güncellendi." });
+
             }
 
             return BadRequest(new { Success = false, Message = "Güncelleme başarısız" });
 
+        }
+
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordDto changePassword)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Where(x => x.Value.Errors.Count > 0)
+                    .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new { Errors = errors });
+            }
+            var userId = User.GetUserId();
+            var result = await _userService.ChangePasswordAsync(userId, changePassword);
+
+            if (!result.Success)
+                return BadRequest(new { Success = false, Message = result.Message });
+
+            return Ok(result);
         }
 
     }

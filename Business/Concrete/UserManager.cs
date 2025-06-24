@@ -3,6 +3,8 @@ using Business.Abstract;
 using Business.Constants;
 using Core.Entities.Concrete;
 using Core.Utilities.Exceptions;
+using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using DTOs.DTOs.UserDtos;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,26 @@ namespace Business.Concrete
         public async Task<int> AddAsync(AuthUser authUser)
         {
             return await _userDal.AddAsync(authUser);
+        }
+
+        public async Task<IResult> ChangePasswordAsync(int userId, ChangePasswordDto changePassword)
+        {
+            var user = await _userDal.Get(u => u.Id == userId);
+            if (user == null)
+                return new ErrorResult(AuthMessages.UserNotFound);
+
+            var isOldPasswordCorrect = HashingHelper.VerifyPasswordHash(changePassword.OldPassword, user.PasswordHash, user.PasswordSalt);
+
+            if (!isOldPasswordCorrect)
+                return new ErrorResult(AuthMessages.PasswordError);
+
+            HashingHelper.CreatePasswordHash(changePassword.NewPassword, out byte[] newHash, out byte[] newSalt);
+            user.PasswordHash = newHash;
+            user.PasswordSalt = newSalt;
+
+            await _userDal.UpdateAsync(user);
+            return new SuccessResult(AuthMessages.PasswordChanged);
+
         }
 
         //public void Add(AuthUser authUser)
