@@ -84,14 +84,12 @@ namespace Core.Utilities.ApiClients
             var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
 
             var response = await client.PutAsync($"{baseUrl}{endpoint}", content);
+            var jsonData = await response.Content.ReadAsStringAsync();
+            
+               
+         return JsonConvert.DeserializeObject<T>(jsonData);
+            
 
-            if (response.IsSuccessStatusCode)
-            {
-                var jsonData = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T>(jsonData);
-            }
-
-            throw new Exception($"API çağrısı başarısız oldu: {response.StatusCode}, Detay: {await response.Content.ReadAsStringAsync()}");
         }
 
     }

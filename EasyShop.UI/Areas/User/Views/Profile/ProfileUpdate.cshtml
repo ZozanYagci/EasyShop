@@ -6,8 +6,8 @@
     <form id="editProfileForm" method="post" asp-action="ProfileUpdate">
         @Html.AntiForgeryToken()
 
-        <div class="alert alert-success profile-alert-success" style="display: none;"></div>
-        <div class="alert alert-danger profile-alert-error" style="display: none;"></div>
+        <div class="alert alert-success profile-alert-success d-none"></div>
+        <div class="alert alert-danger profile-alert-error d-none"></div>
 
         <div class="form-group">
 

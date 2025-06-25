@@ -6,8 +6,8 @@
             const $success = $form.find(successSelector);
             const $error = $form.find(errorSelector);
 
-            $success.hide();
-            $error.hide();
+            $success.addClass("d-none").text("");
+            $error.addClass("d-none").text("");
             $form.find("span.text-danger").text("");
 
             let formData = $form.serialize();
@@ -19,9 +19,9 @@
                 data: formData,
                 success: function (response) {
                     if (response && response.success) {
-                        $success.text(response.message).show();
+                        $success.removeClass("d-none").text(response.message);
                     } else {
-                        $error.text(response.message || "Bir hata oluştu, lütfen tekrar deneyin.").show();
+                        $error.removeClass("d-none").text(response.message || "Bir hata oluştu, lütfen tekrar deneyin.");
                     }
                 },
                 error: function (xhr) {
@@ -35,7 +35,7 @@
                             }
                         }
                     } else {
-                        $error.text(xhr.responseJSON?.message || "Bir hata oluştu, lütfen tekrar deneyin.").show();
+                        $error.removeClass("d-none").text(xhr.responseJSON?.message || "Bir hata oluştu, lütfen tekrar deneyin.");
                     }
                 }
             });
