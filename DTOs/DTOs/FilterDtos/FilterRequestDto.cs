@@ -8,10 +8,11 @@ namespace DTOs.DTOs.FilterDtos
 {
     public class FilterRequestDto
     {
-        public List<string> Colors { get; set; }
-        public List<string> Components { get; set; }
-        public List<string> Sizes { get; set; }
+        public List<string>? Colors { get; set; }
+        public List<string>? Components { get; set; }
+        public List<string>? Sizes { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
+        public string? SortBy { get; set; }
     }
 }

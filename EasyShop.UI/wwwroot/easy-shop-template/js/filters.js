@@ -1,24 +1,25 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
-    getAllProducts();
-});
+﻿let currentSort = "newest";
 
-function getAllProducts() {
-    fetch("https://localhost:7090/api/Products/ProductWithPrices", {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-    })
-        .then(response => response.json())
-        .then(data => updateProductList(data))
-        .catch(error => console.error("Ürünler getirilirken hata oluştu:", error));
-}
+document.addEventListener('DOMContentLoaded', () => {
+    getFilteredProducts();
+});
 
 document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', () => {
-        applyFilters();
+        getFilteredProducts();
     });
 });
 
-function applyFilters() {
+document.querySelectorAll('.sort-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentSort = e.target.dataset.sort;
+        console.log("Seçilen Sıralama:", currentSort);
+        getFilteredProducts();
+    });
+});
+
+function getFilteredProducts() {
     const selectedFilters = {
         colors: [],
         components: [],
@@ -26,56 +27,35 @@ function applyFilters() {
         minPrice: null,
         maxPrice: null
     };
-    let hasFilters = false;
 
     document.querySelectorAll('.filter-checkbox:checked').forEach(checkbox => {
         const filterType = checkbox.dataset.filterType;
         const value = checkbox.dataset.value;
 
-        if (!selectedFilters[filterType]) {
-            selectedFilters[filterType] = [];
-        }
         if (filterType === "Renk") {
             selectedFilters.colors.push(value);
-        }
-        else if (filterType === "Materyal") {
+        } else if (filterType === "Materyal") {
             selectedFilters.components.push(value);
-        }
-        else if (filterType === "Beden") {
+        } else if (filterType === "Beden") {
             selectedFilters.sizes.push(value);
-        }
-        else if (filterType === "Fiyat") {
-            const [minPrice, maxPrice] = value.split('-').map(v => parseFloat(v));
+        } else if (filterType === "Fiyat") {
+            const [minPrice, maxPrice] = value.split('-').map(Number);
             selectedFilters.minPrice = minPrice;
             selectedFilters.maxPrice = maxPrice;
         }
-       
-        hasFilters = true;
-        
     });
 
-    if (!hasFilters) {
-        getAllProducts();
-        return;
-    }
-
-    //if (Object.keys(selectedFilters).length === 0) {
-    //    getAllProducts();
-    //    return;
-    //}
-
-    console.log("Seçilen Filtreler:", selectedFilters); //kontrol
-
     const filterRequest = {
-        colors: selectedFilters.colors.length > 0 ? selectedFilters.colors : [],
-        components: selectedFilters.components.length > 0 ? selectedFilters.components : [],
-        sizes: selectedFilters.sizes.length > 0 ? selectedFilters.sizes : [],
+        colors: selectedFilters.colors,
+        components: selectedFilters.components,
+        sizes: selectedFilters.sizes,
         minPrice: selectedFilters.minPrice ?? null,
-        maxPrice: selectedFilters.maxPrice ?? null
+        maxPrice: selectedFilters.maxPrice ?? null,
+        sortBy: currentSort
     };
 
+    console.log("Gönderilen filtre + sıralama:", filterRequest);
 
-    //AJAX çağrısı
     fetch("https://localhost:7090/api/Filters/filtered-products", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -83,5 +63,5 @@ function applyFilters() {
     })
         .then(response => response.json())
         .then(data => updateProductList(data))
-        .catch(error => console.error("Filtreleme hatası:", error));
+        .catch(error => console.error("Filtreleme / sıralama hatası:", error));
 }

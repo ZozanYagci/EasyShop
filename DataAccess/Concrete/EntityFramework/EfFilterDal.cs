@@ -83,6 +83,26 @@ namespace DataAccess.Concrete.EntityFramework
                 .Any(pp => pp.IsCurrent && pp.Price >= filterRequest.MinPrice && pp.Price <= filterRequest.MaxPrice));
             }
 
+
+            //sorting
+            switch (filterRequest.SortBy)
+            {
+                case "price_asc":
+                    query = query.OrderBy(p => p.ProductPrices.FirstOrDefault(pp => pp.IsCurrent).Price);
+                    break;
+                case "price_desc":
+                    query = query.OrderByDescending(p => p.ProductPrices.FirstOrDefault(pp => pp.IsCurrent).Price);
+                    break;
+                case "newest":
+                    query = query.OrderByDescending(p => p.CreatedAt);
+                    break;
+                default:
+                    query = query.OrderBy(p => p.Name);
+                    break;
+
+            }
+
+
             //Filtre uygulanmışsa filtreli ürünleri, uygulanmamışsa tüm ürünleri getirecek.
             var products = await query.Select(p => new ProductsDto
             {
