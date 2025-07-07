@@ -24,5 +24,7 @@ namespace Entities.Concrete
         public virtual ICollection<ProductAttribute> ProductAttributes { get; set; } 
         public virtual ICollection<ProductDetail> ProductDetail { get; set; }
         public virtual ICollection<ProductStock> ProductStocks { get; set; }
+        public ICollection<ProductImage> ProductImages { get; set; }
+    
     }
 }
