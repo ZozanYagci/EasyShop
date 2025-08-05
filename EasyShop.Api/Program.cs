@@ -1,12 +1,12 @@
 using Business.Abstract;
 using Business.Concrete;
-using Business.Mapping;
 using Business.ValidationRules.FluentValidation;
+using Core.Interfaces;
 using Core.Utilities.Middlewares;
 using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
-using DTOs.DTOs.UserDtos;
+using EasyShop.Api.Services.Providers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -86,6 +86,12 @@ builder.Services.AddScoped<IAuthService, AuthManager>();
 builder.Services.AddScoped<IUserDal, EfUserDal>();
 builder.Services.AddScoped<IUserService, UserManager>();
 
+builder.Services.AddScoped<IProductImageService, ProductImageManager>();
+builder.Services.AddScoped<IProductImageDal, EfProductImageDal>();
+
+builder.Services.AddScoped<IFileService, LocalFileManager>();
+builder.Services.AddScoped<IPathProvider, PathProvider>();
+
 builder.Services.AddScoped<ITokenHelper, JwtHelper>();
 
 builder.Services.AddHttpContextAccessor();
@@ -93,7 +99,7 @@ builder.Services.AddHttpContextAccessor();
 //Add Cors
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-    builder.WithOrigins("https://localhost:7118")
+    builder.WithOrigins()
            .AllowAnyMethod()
            .AllowAnyHeader();
 
@@ -127,9 +133,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseCors("MyPolicy");
 app.UseAuthentication();

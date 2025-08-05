@@ -42,7 +42,7 @@ namespace Business.Mapping
             CreateMap<UserProfileUpdateDto, AuthUser>().ReverseMap();
 
             CreateMap<ProductImage, ProductImageDto>().ReverseMap();
-            CreateMap<ProductImage, ProductImageCreateDto>().ReverseMap();  
+           
         }
     }
 }

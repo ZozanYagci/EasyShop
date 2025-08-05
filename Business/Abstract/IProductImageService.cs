@@ -11,7 +11,7 @@ namespace Business.Abstract
 {
     public interface IProductImageService : IGenericService<ProductImage>
     {
-        Task<IDataResult<ProductImageDto>> AddImageAsync(ProductImageCreateDto imageDto);
+        Task<IDataResult<List<ProductImageDto>>> UploadImagesAsync(ProductImageUploadDto uploadDto);
         Task<IResult> RemoveImageAsync(int imageId);
         Task<IDataResult<List<ProductImageDto>>> GetImagesByProductIdAsync(int productId);
     }
