@@ -99,7 +99,7 @@ builder.Services.AddHttpContextAccessor();
 //Add Cors
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-    builder.WithOrigins()
+    builder.WithOrigins("https://localhost:7118")
            .AllowAnyMethod()
            .AllowAnyHeader();
 
