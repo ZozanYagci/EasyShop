@@ -16,23 +16,22 @@ namespace DataAccess.Concrete.EntityConfigurations
             builder.HasKey(sc => sc.Id);
 
             // Properties
-            builder.Property(sc => sc.Quantity)
-                   .IsRequired(); 
+            builder.Property(sc => sc.AuthUserId).IsRequired();
 
-            builder.Property(sc => sc.AddedAt)
+            builder.Property(sc => sc.CreatedDate)
                    .IsRequired()
-                   .HasDefaultValueSql("GETDATE()"); 
+                   .HasDefaultValueSql("GETDATE()");
 
             // Relationships
-            builder.HasOne(sc => sc.User)
-                   .WithMany(u => u.ShoppingCarts)
-                   .HasForeignKey(sc => sc.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);  
+            builder.HasOne(sc => sc.AuthUser)
+                   .WithMany()
+                   .HasForeignKey(sc => sc.AuthUserId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(sc => sc.Product)
-                   .WithMany(p => p.ShoppingCarts)
-                   .HasForeignKey(sc => sc.ProductId)
-                   .OnDelete(DeleteBehavior.Cascade);  
+            builder.HasMany(sc => sc.Items)
+                   .WithOne(i => i.Cart)
+                   .HasForeignKey(i => i.CartId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             // Table Mapping
             builder.ToTable("ShoppingCarts");

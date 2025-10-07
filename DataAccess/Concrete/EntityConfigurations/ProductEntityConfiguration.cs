@@ -36,7 +36,7 @@ namespace DataAccess.Concrete.EntityConfigurations
                    .HasForeignKey(od => od.ProductId)
                    .OnDelete(DeleteBehavior.Restrict);  
 
-            builder.HasMany(p => p.ShoppingCarts)
+            builder.HasMany(p => p.ShoppingCartItems)
                    .WithOne(sc => sc.Product)
                    .HasForeignKey(sc => sc.ProductId)
                    .OnDelete(DeleteBehavior.Cascade); 

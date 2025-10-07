@@ -14,15 +14,15 @@ namespace DataAccess.Concrete.EntityConfigurations
             // Properties
             builder.Property(u => u.FirstName)
                    .IsRequired()
-                   .HasMaxLength(50);  
+                   .HasMaxLength(50);
 
             builder.Property(u => u.LastName)
                    .IsRequired()
-                   .HasMaxLength(50);  
+                   .HasMaxLength(50);
 
             builder.Property(u => u.Email)
                    .IsRequired()
-                   .HasMaxLength(100);  
+                   .HasMaxLength(100);
 
             builder.HasIndex(u => u.Email)
                    .IsUnique();
@@ -35,10 +35,10 @@ namespace DataAccess.Concrete.EntityConfigurations
 
 
             builder.Property(u => u.Phone)
-                   .HasMaxLength(20);  
+                   .HasMaxLength(20);
 
             builder.Property(u => u.Address)
-                   .HasMaxLength(200); 
+                   .HasMaxLength(200);
 
             builder.Property(u => u.CreatedAt)
                    .IsRequired()
@@ -54,17 +54,17 @@ namespace DataAccess.Concrete.EntityConfigurations
             builder.HasMany(u => u.Orders)
                    .WithOne(o => o.User)
                    .HasForeignKey(o => o.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);  
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(u => u.Reviews)
                    .WithOne(r => r.User)
                    .HasForeignKey(r => r.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);  
+                   .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(u => u.ShoppingCarts)
-                   .WithOne(sc => sc.User)
-                   .HasForeignKey(sc => sc.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);  
+            //builder.HasMany(u => u.ShoppingCarts)
+            //       .WithOne(sc => sc.User)
+            //       .HasForeignKey(sc => sc.UserId)
+            //       .OnDelete(DeleteBehavior.Restrict);  
 
             // Table Mapping
             builder.ToTable("Users");

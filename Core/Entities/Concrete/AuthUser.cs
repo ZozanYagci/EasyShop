@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Entities.Concrete
 {
-    public class AuthUser:BaseEntity
+    public class AuthUser : BaseEntity
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,6 +16,6 @@ namespace Core.Entities.Concrete
         public byte[] PasswordSalt { get; set; }
         public bool Status { get; set; }
 
-        public ICollection<AuthUserOperationClaim> AuthUserOperationClaims { get; set; }    
+        public ICollection<AuthUserOperationClaim> AuthUserOperationClaims { get; set; }
     }
 }

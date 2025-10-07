@@ -1,6 +1,7 @@
 using Business.Abstract;
 using Business.Concrete;
 using Business.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Caching;
 using Core.Interfaces;
 using Core.Utilities.Middlewares;
 using Core.Utilities.Security.JWT;
@@ -11,8 +12,10 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -60,10 +63,32 @@ builder.Services.AddSwaggerGen(c =>
 
 
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddDbContext<Context>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// integration test ortamýnda deðilsek;
+if (!builder.Environment.IsEnvironment("IntegrationTest"))
+{
+
+    builder.Services.AddDbContext<Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    // redis configuration (StackExchange.Redis)
+    builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    {
+        var configuration = builder.Configuration.GetSection("Redis")["Configuration"];
+        if (string.IsNullOrWhiteSpace(configuration))
+            throw new InvalidOperationException("Redis configuration is missing (Redis:Configuration).");
+
+        var options = ConfigurationOptions.Parse(configuration, true);
+        options.ResolveDns = true;
+        return ConnectionMultiplexer.Connect(options);
+    });
+
+    builder.Services.TryAddSingleton<ICacheService, RedisCacheManager>();
+}
+
+//builder.Services.AddSingleton<ICacheService, RedisCacheManager>();
 
 builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection("TokenOptions"));
 
@@ -89,8 +114,11 @@ builder.Services.AddScoped<IUserService, UserManager>();
 builder.Services.AddScoped<IProductImageService, ProductImageManager>();
 builder.Services.AddScoped<IProductImageDal, EfProductImageDal>();
 
-builder.Services.AddScoped<IFileService, LocalFileManager>();
+builder.Services.AddTransient<IFileService, LocalFileManager>();
 builder.Services.AddScoped<IPathProvider, PathProvider>();
+
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartManager>();
+builder.Services.AddScoped<IShoppingCartDal, EfShoppingCartDal>();
 
 builder.Services.AddScoped<ITokenHelper, JwtHelper>();
 
@@ -138,10 +166,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseCors("MyPolicy");
+app.UseMiddleware<ExceptionMiddleware>(); //Global hata yönetimi
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<ExceptionMiddleware>(); //Global hata yönetimi
+
 
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
