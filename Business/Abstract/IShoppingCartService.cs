@@ -16,5 +16,7 @@ namespace Business.Abstract
         Task<IResult> UpdateQuantityAsync(UpdateCartDto updateCart);
         Task<IDataResult<List<ShoppingCartDetailDto>>> GetUserCartAsync(int userId);
         Task<IResult> ClearCartAsync(int userId);
+
+        Task<IResult> SyncCartAsync(int userId, List<SyncCartItemDto> items);
     }
 }

@@ -5,6 +5,7 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DTOs.DTOs.ShoppingCartDtos;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,6 +138,46 @@ namespace Business.Concrete
             await shoppingCartDal.UpdateAsync(cart);
             await cacheService.RemoveAsync(GetCacheKey(updateCart.UserId));
             return new SuccessResult(CartMessages.CartQuantityUpdated);
+        }
+
+      
+        // UI'dan gelecek guest cart verilerini login olmuş kullanıcının sepetiyle birleştir,
+        // çünkü login öncesi sepete eklediğimiz ürünler kaybolmasın
+        public async Task<IResult> SyncCartAsync(int userId, List<SyncCartItemDto> items)
+        {
+            if (items is null || !items.Any())
+                return new SuccessResult("Senkronize edilecek ürün yok.");
+
+            var cleanedItems = items.Where(i => i.Quantity > 0 && i.ProductId > 0)
+                .ToList();
+
+            if (!cleanedItems.Any())
+
+                return new ErrorResult("Geçerli sepet öğesi bulunamadı.");
+
+
+            //duplicate productId'leri aggregate et
+
+            var aggregated = cleanedItems
+                .GroupBy(i => i.ProductId)
+                .Select(g => new SyncCartItemDto
+                {
+                    ProductId = g.Key,
+                    Quantity = g.Sum(i => i.Quantity)
+                }).ToList();
+
+
+            var cart = await shoppingCartDal.GetCartByUserIdAsync(userId);
+            if (cart is null)
+            {
+                cart = new ShoppingCart { AuthUserId = userId };
+                await shoppingCartDal.AddAsync(cart);
+
+            }
+            await shoppingCartDal.MergeCartItemAsync(cart.Id, aggregated);
+
+            return new SuccessResult(CartMessages.CartSynced);
+
         }
     }
 }

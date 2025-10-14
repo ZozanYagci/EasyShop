@@ -17,5 +17,7 @@ namespace Business.Constants
         public const string ProductRemovedFromCart = "Ürün sepetten kaldırıldı.";
         public const string CartCleared = "Sepet başarıyla temizlendi.";
 
+        public const string CartSynced = "Sepet başarıyla senkronize edildi.";
+
     }
 }

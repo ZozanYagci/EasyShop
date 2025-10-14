@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
+using Core.Extensions;
 using DTOs.DTOs.ShoppingCartDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,6 +62,23 @@ namespace EasyShop.Api.Controllers
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
+        }
+
+        [Authorize]
+        [HttpPost("sync")]
+        public async Task<IActionResult> SyncCart([FromBody] List<SyncCartItemDto> items)
+        {
+            var userId = User.GetUserId();
+
+            if (userId == 0)
+                return Unauthorized();
+
+            var result = await _shoppingCartService.SyncCartAsync(userId, items);
+
+            if (result.Success)
+                return Ok(result.Message);
+
+            return BadRequest(result.Message);
         }
     }
 }

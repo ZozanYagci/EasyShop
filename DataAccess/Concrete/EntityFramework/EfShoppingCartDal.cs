@@ -43,5 +43,40 @@ namespace DataAccess.Concrete.EntityFramework
                     .Select(pp => pp.Price).FirstOrDefault(),
                 }).ToListAsync();
         }
+
+        // login olduktan sonra guest (localStorage) verilerini merge etmek için eklendi
+        public async Task MergeCartItemAsync(int cartId, List<SyncCartItemDto> items)
+        {
+            if (items is null || items.Count == 0) return;
+
+            var existingItems = await _context.ShoppingCartItems
+                .Where(x => x.CartId == cartId)
+                .ToListAsync();
+
+
+            var existingDict = existingItems.ToDictionary(x => x.ProductId);
+
+            foreach (var item in items)
+            {
+                if (existingDict.TryGetValue(item.ProductId, out var existingItem))
+                {
+                    existingItem.Quantity += item.Quantity;
+                    _context.ShoppingCartItems.Update(existingItem);
+                }
+
+                else
+                {
+                    var newItem = new ShoppingCartItem
+                    {
+                        CartId = cartId,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                    };
+                    await _context.ShoppingCartItems.AddAsync(newItem);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

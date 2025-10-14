@@ -13,5 +13,6 @@ namespace DataAccess.Abstract
     {
         Task<ShoppingCart?> GetCartByUserIdAsync(int userId);
         Task<List<ShoppingCartDetailDto>> GetCartDetailsByUserIdAsync(int userId);
+        Task MergeCartItemAsync(int cartId, List<SyncCartItemDto> items);
     }
 }
